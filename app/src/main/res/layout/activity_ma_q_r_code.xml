@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:background="#37111111"
+    android:weightSum="10"
+    android:backgroundTint="#FDFBF7FB"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:layout_weight="1.5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:background="@drawable/botron_bot">
+
+        <ImageView
+            android:id="@+id/back2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:src="@drawable/ic_baseline_arrow_back_24"/>
+
+        <Button
+            android:layout_weight="8.5"
+            android:transitionName="button_QR"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="MÃ QR CODE"
+            android:textSize="30dp"
+            android:padding="20dp"
+            android:textColor="#F83728"
+            android:gravity="center"
+            android:background="@drawable/botron_bot"
+            android:layout_marginTop="0dp"/>
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/imgQrcode"
+        android:layout_weight="8"
+        android:background="#FDFBF7FB"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+    <LinearLayout
+        android:layout_weight="0.5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <Button
+            android:id="@+id/btnChangeCode"
+            android:text="Đổi mã QR"
+            android:background="@drawable/botron_bot"
+            android:textColor="#F44336"
+            android:linksClickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+
+</LinearLayout>

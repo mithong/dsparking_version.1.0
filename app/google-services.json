@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "1059316722935",
+    "firebase_url": "https://dtuparking.firebaseio.com",
+    "project_id": "dtuparking",
+    "storage_bucket": "dtuparking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059316722935:android:9f5bd8893e179380cdf7f2",
+        "android_client_info": {
+          "package_name": "com.example.dtuparking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1059316722935-3t6r72c0c94hotstsbkr0fjlg6lm9i77.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM_p0SvZ5OdEXKj00horVO54iIsZvOvOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1059316722935-3t6r72c0c94hotstsbkr0fjlg6lm9i77.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1059316722935:android:91d5cb52ea52435ecdf7f2",
+        "android_client_info": {
+          "package_name": "com.example.sinhvien"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1059316722935-3t6r72c0c94hotstsbkr0fjlg6lm9i77.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM_p0SvZ5OdEXKj00horVO54iIsZvOvOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1059316722935-3t6r72c0c94hotstsbkr0fjlg6lm9i77.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
