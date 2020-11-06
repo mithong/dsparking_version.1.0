@@ -3,7 +3,9 @@ package com.example.dtuparking;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
@@ -37,6 +39,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -63,20 +70,40 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         Intent intent = getIntent();
         final String id = intent.getStringExtra("idSinhVien");
 
-         // đọc tên sinh viên mã sinh viên từ firebase
-        mDatabase.child("User/parkingMan/information/").child(id).addValueEventListener(new ValueEventListener() {
+
+
+          //đọc tên sinh viên mã sinh viên từ firebase
+        mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("position").getValue().toString().equals("1")){
-                    txtten.setText(snapshot.child("name").getValue().toString());
-                    txtmasv.setText(snapshot.child("idStudent").getValue().toString());
-                    new LoadImage().execute(snapshot.child("avatar").getValue().toString());
+                try {
+                    if(snapshot.child("position").getValue().toString().equals("3")){
+                        txtten.setText(snapshot.child("name").getValue().toString());
+                        txtmasv.setText(snapshot.child("idStudent").getValue().toString());
+                        new LoadImage().execute(snapshot.child("avatar").getValue().toString());
+                    }
+                    else if(snapshot.child("position").getValue().toString().equals("2")){
+                        txtten.setText(snapshot.child("name").getValue().toString());
+                        txtmasv.setText(snapshot.child("idLecturers").getValue().toString());
+                        new LoadImage().execute(snapshot.child("avatar").getValue().toString());
+                    }
+                }catch (Exception e){
+                    mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
+                        @SuppressLint("RestrictedApi")
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            txtten.setText(snapshot.child("name").getValue().toString());
+                            txtmasv.setText(snapshot.child("idGuard").getValue().toString());
+                            new LoadImage().execute(snapshot.child("avatar").getValue().toString());
+                            fab.setVisibility(View.GONE);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
-                else if(snapshot.child("position").getValue().toString().equals("0")){
-                    txtten.setText(snapshot.child("name").getValue().toString());
-                    txtmasv.setText(snapshot.child("idLecturers").getValue().toString());
-                    new LoadImage().execute(snapshot.child("avatar").getValue().toString());
-                }
+
             }
 
             @Override
@@ -122,15 +149,21 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
-        mDatabase.child("User/parkingMan/information/").child(id).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("position").getValue().toString().equals("1")){
-                    setUpViewPager();
-                }
-                else if(snapshot.child("position").getValue().toString().equals("0")){
+                try {
+
+                    if(snapshot.child("position").getValue().toString().equals("3")){
+                        setUpViewPager();
+                    }
+                    else if(snapshot.child("position").getValue().toString().equals("2")){
+                        setUpViewPager();
+                    }
+                }catch (Exception e){
                     setUpViewPagerBV();
                 }
+
             }
 
             @Override
@@ -138,7 +171,6 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
 
             }
         });
-
 
 
         // bắt sự kiện chuyển trang
@@ -157,6 +189,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
                 return true;
             }
         });
+        UpdateHeader();
     }
 
 
@@ -164,7 +197,6 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
     private void anhxa() {
         // ánh xạ
         imgmenu = (ImageView) findViewById(R.id.imgmenu) ;
-        imgavatamenu = (ImageView) findViewById(R.id.imgavatamenu) ;
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
         navigationView = (NavigationView) findViewById(R.id.navigationview);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -173,8 +205,6 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         imgavata = (ImageView) findViewById(R.id.imgavata) ;
         txtten = (TextView) findViewById(R.id.txtten);
         txtmasv = (TextView) findViewById(R.id.txtmasv);
-        txttensvmenu = (TextView) findViewById(R.id.txttensvmenu);
-        txtmasvmenu = (TextView) findViewById(R.id.txtmasvmenu);
         mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
@@ -205,10 +235,39 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         }
     }
 
+    private class LoadImagemenu extends AsyncTask<String, Void , Bitmap> {
+        Bitmap bitmaphinh = null;
+        @Override
+        protected Bitmap doInBackground( String... strings ) {
+            try{
+                URL url = new URL(strings[0]);
+
+                InputStream inputStream = url.openConnection().getInputStream();
+
+                bitmaphinh = BitmapFactory.decodeStream(inputStream);
+
+
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return bitmaphinh;
+        }
+
+        @Override
+        protected void onPostExecute( Bitmap bitmap ) {
+            super.onPostExecute(bitmap);
+            imgavatamenu.setImageBitmap(bitmap);
+        }
+    }
+
     // bắt sự kiện chọn và chuyển đến trang khác của sinh viên
     private void setUpViewPager() {
+
         ViewAdapter viewAdapter = new ViewAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPager.setAdapter(viewAdapter);
+
+        viewPager.setAdapter(viewAdapter); //lỗi ở đây
+        System.out.println("========================");
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled( int position, float positionOffset, int positionOffsetPixels ) {
@@ -235,7 +294,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         });
     }
 
-    // bắt sự kiện chọn và chuyển đến trang khác cảo bảo vệ
+    // bắt sự kiện chọn và chuyển đến trang khác của bảo vệ
     private void setUpViewPagerBV() {
         ViewAdapterBV viewAdapterbv = new ViewAdapterBV(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewAdapterbv);
@@ -277,15 +336,24 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
+        // nhận dữ liệu từ login
+        Intent intent = getIntent();
+        final String id = intent.getStringExtra("idSinhVien");
+
         switch(menuItem.getItemId()){
             case R.id.navthongtin:
-                Toast.makeText(this, "Thông Tin", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(home.this,ThongTinSV.class);
+                intent2.putExtra("idSinhVien",id);
+                startActivity(intent2);
                 break;
             case R.id.navphanhoi:
-                Toast.makeText(this, "Phản Hồi", Toast.LENGTH_SHORT).show();
+                Intent intent3 = new Intent(home.this,PhanHoi.class);
+                intent3.putExtra("idSinhVien",id);
+                startActivity(intent3);
                 break;
             case R.id.navlienlac:
-                Toast.makeText(this, "Liên Lạc", Toast.LENGTH_SHORT).show();
+                Intent intent4 = new Intent(home.this,LienLac.class);
+                startActivity(intent4);
                 break;
             case R.id.navdangxuat:
                 XacNhanDangXuat();
@@ -316,5 +384,84 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
         alertDialog.show();
+    }
+
+    private void UpdateHeader(){
+        NavigationView navigationView1 = (NavigationView) findViewById(R.id.navigationview);
+        View view = navigationView1.getHeaderView(0);
+        imgavatamenu = (ImageView) view.findViewById(R.id.imgavatamenu2) ;
+        txttensvmenu = (TextView) view.findViewById(R.id.txttensvmenu2);
+        txtmasvmenu = (TextView) view.findViewById(R.id.txtmasvmenu2);
+
+        // nhận dữ liệu từ login
+        Intent intent = getIntent();
+        final String id = intent.getStringExtra("idSinhVien");
+        // đọc tên sinh viên mã sinh viên từ firebase
+        mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    if(snapshot.child("position").getValue().toString().equals("3")){
+                        txttensvmenu.setText(snapshot.child("name").getValue().toString());
+                        txtmasvmenu.setText(snapshot.child("idStudent").getValue().toString());
+                        new LoadImagemenu().execute(snapshot.child("avatar").getValue().toString());
+                    }
+                    else if(snapshot.child("position").getValue().toString().equals("2")){
+                        txttensvmenu.setText(snapshot.child("name").getValue().toString());
+                        txtmasvmenu.setText(snapshot.child("idLecturers").getValue().toString());
+                        new LoadImagemenu().execute(snapshot.child("avatar").getValue().toString());
+                    }
+                }catch (Exception e){
+                    mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            txttensvmenu.setText(snapshot.child("name").getValue().toString());
+                            txtmasvmenu.setText(snapshot.child("idGuard").getValue().toString());
+                            new LoadImagemenu().execute(snapshot.child("avatar").getValue().toString());
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        androidx.appcompat.app.AlertDialog.Builder b =new androidx.appcompat.app.AlertDialog.Builder(home.this);
+        b.setTitle("Question");
+        b.setMessage("Are you sure you want to exit?");
+        b.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which){
+                finish();
+            }
+        });
+        b.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.cancel();
+            }
+        });
+        b.create().show();
     }
 }

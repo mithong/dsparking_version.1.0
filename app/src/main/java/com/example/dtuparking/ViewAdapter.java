@@ -13,8 +13,10 @@ public class ViewAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem( int position ) {
+        System.out.println("OK");
         switch (position){
             case 0:
+                System.out.println("Chạy 0");
                 return new HomeFragment();
             case 1:
                 return new HistoryFragment();

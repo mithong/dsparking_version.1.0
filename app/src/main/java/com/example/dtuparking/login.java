@@ -37,6 +37,7 @@ public class login extends AppCompatActivity {
 
         anhxa();
 
+
         // set chiều dài tên đăng nhập là 10 mật khẩu là 15 kí tự
         edtTdn.setCounterMaxLength(20);
         edtMk.setCounterMaxLength(15);
@@ -74,7 +75,7 @@ public class login extends AppCompatActivity {
                         editor.commit();
                     }
                     else{
-                        mDatabase.child("User/parkingMan/account/").child(TenDangNhap).addValueEventListener(new ValueEventListener() {
+                        mDatabase.child("User/account/").child(TenDangNhap).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange( @NonNull DataSnapshot snapshot ) {
                                 // kiểm tra tên đăng nhập

@@ -9,12 +9,12 @@
     android:layout_width="match_parent">
 
     <LinearLayout
-        android:layout_weight="1.5"
+        android:layout_weight="1.2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:weightSum="10"
-        android:background="@drawable/botron_bot">
+        android:background="#E8E7E7">
 
         <ImageView
             android:id="@+id/back2"
@@ -29,17 +29,21 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="MÃ QR CODE"
-            android:textSize="30dp"
+            android:textSize="25sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="25sp"
+            android:autoSizeMaxTextSize="35sp"
+            android:autoSizeStepGranularity="30sp"
             android:padding="20dp"
             android:textColor="#F83728"
             android:gravity="center"
-            android:background="@drawable/botron_bot"
+            android:background="#E8E7E7"
             android:layout_marginTop="0dp"/>
 
     </LinearLayout>
     <ImageView
         android:id="@+id/imgQrcode"
-        android:layout_weight="8"
+        android:layout_weight="8.3"
         android:background="#FDFBF7FB"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
@@ -50,9 +54,14 @@
         <Button
             android:id="@+id/btnChangeCode"
             android:text="Đổi mã QR"
-            android:background="@drawable/botron_bot"
+            android:background="#E8E7E7"
             android:textColor="#F44336"
             android:linksClickable="true"
+            android:textSize="14sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="14sp"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeStepGranularity="17sp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>

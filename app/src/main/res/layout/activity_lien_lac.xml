@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:weightSum="10"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".LienLac">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.2"
+        android:background="#E8E7E7"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/backll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:src="@drawable/ic_baseline_arrow_back_24" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8.5"
+            android:background="#E8E7E7"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="Liên lạc"
+            android:textColor="#F83728"
+            android:textSize="25sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="25sp"
+            android:autoSizeMaxTextSize="35sp"
+            android:autoSizeStepGranularity="30sp"
+            android:transitionName="button_QR" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_weight="5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:src="@drawable/diachitruong"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:weightSum="10"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:src="@drawable/ic_baseline_add_location_242"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="9"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:text="Địa chỉ: 254 Nguyễn Văn Linh, Quận Thanh Khê - Tp. Đà Nẵng"
+            android:textColor="#050000"
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:weightSum="10"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:src="@drawable/ic_baseline_local_phone_242"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="4"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:text="Số Điện Thoại:"
+            android:textColor="#050000"
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="25sp" />
+        <TextView
+            android:id="@+id/sdt1"
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="5"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:text="(+84) 2363.650403"
+            android:textColor="#017C8C"
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:weightSum="10"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="4"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:textColor="#050000"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/sdt2"
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="5"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:text="(+84) 2363.653561"
+            android:textColor="#017C8C"
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:weightSum="10"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:src="@drawable/ic_baseline_contact_mail_24"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="9"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:text="Fax: (+84).236.3.650443"
+            android:textColor="#050000"
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="25sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:weightSum="10"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="0dp"
+            android:src="@drawable/ic_baseline_language_24"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:text="Website:"
+            android:textColor="#050000"
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="25sp" />
+        <TextView
+            android:id="@+id/web"
+            android:layout_width="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="6"
+            android:layout_height="match_parent"
+            android:gravity="left|center"
+            android:text="http://duytan.edu.vn"
+            android:textColor="#017C8C"
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="25sp" />
+    </LinearLayout>
+</LinearLayout>

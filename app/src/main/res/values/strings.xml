@@ -6,4 +6,11 @@
     <string name="matkhau">Mật khẩu </string>
     <string name="luumatkhau">Lưu mật khẩu </string>
     <string name="dangnhap">Đăng nhập </string>
+    <string name="key">AIzaSyAilSJiYD_7XWd3dC9wyqOM7k_8uu2l5zY</string>
+
+    <string-array name="date">
+        <item>Tháng</item>
+        <item>Tuần</item>
+    </string-array>
+
 </resources>

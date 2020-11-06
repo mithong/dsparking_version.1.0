@@ -55,36 +55,20 @@ public class MaQRCode extends AppCompatActivity {
         });
 
         // truy ấn tới mã QRCODE
-        mDatabase.child("User/parkingMan/information/").child(id).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange( @NonNull DataSnapshot snapshot ) {
                 // kiểm tra có phải sinh viên
-                if(snapshot.child("position").getValue().toString().equals("1")){
+                if(snapshot.child("position").getValue().toString().equals("3")){
 
                     // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
                     String id = snapshot.getKey().toString();
-
-                    String adress = snapshot.child("adress").getValue().toString();
-                    String birthday = snapshot.child("birthday").getValue().toString();
-                    String classs = snapshot.child("class").getValue().toString();
                     String idStudent = snapshot.child("idStudent").getValue().toString();
-                    String name = snapshot.child("name").getValue().toString();
-                    String sex = snapshot.child("sex").getValue().toString();
                     String secretNum = snapshot.child("secretNum").getValue().toString();
-
-                    String adres = snapshot.child("adress").getKey().toString();
-                    String birthda = snapshot.child("birthday").getKey().toString();
-                    String clas = snapshot.child("class").getKey().toString();
-                    String idStuden = snapshot.child("idStudent").getKey().toString();
-                    String nam = snapshot.child("name").getKey().toString();
-                    String se = snapshot.child("sex").getKey().toString();
                     String secretNu = snapshot.child("secretNum").getKey().toString();
 
-                    // tổng hợp các dữ liệu
-                    String dulieu ="{\n" + "id : '" + id + "',\n" + adres +": '" + adress + "',\n" + birthda +": '"+ birthday + "',\n"
-                            + clas +": '"+ classs + "',\n" + idStuden +": "+ idStudent + ",\n"
-                            + nam +": '"+ name + "',\n" + se +": '"+ sex + "',\n"
-                            + secretNu +": "+ secretNum +"\n}";
+                    String dulieu ="{\n" + "id : '" + id + "',\n" + "idT" +": '"+ idStudent + "',\n"
+                            + secretNu +": '"+ secretNum +"'\n}";
 
                     // tạo mã QR từ các dữ liệu trên
                     QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
@@ -97,28 +81,15 @@ public class MaQRCode extends AppCompatActivity {
                 }
 
                 // kiểm tra có phải giảng viên
-                else if(snapshot.child("position").getValue().toString().equals("0")){
+                else if(snapshot.child("position").getValue().toString().equals("2")){
                     // set dữ liệu string để tạo mã Qr dựa vào thông tin giảng viên
                     String id = snapshot.getKey().toString();
-
-                    String adress = snapshot.child("adress").getValue().toString();
-                    String birthday = snapshot.child("birthday").getValue().toString();
                     String idLecturers = snapshot.child("idLecturers").getValue().toString();
-                    String name = snapshot.child("name").getValue().toString();
-                    String sex = snapshot.child("sex").getValue().toString();
                     String secretNum = snapshot.child("secretNum").getValue().toString();
-
-                    String adres = snapshot.child("adress").getKey().toString();
-                    String birthda = snapshot.child("birthday").getKey().toString();
-                    String idLecturer = snapshot.child("idLecturers").getKey().toString();
-                    String nam = snapshot.child("name").getKey().toString();
-                    String se = snapshot.child("sex").getKey().toString();
                     String secretNu = snapshot.child("secretNum").getKey().toString();
 
                     // tổng hợp các dữ liệu
-                    String dulieu ="{\n" + "id : '" + id + "',\n" + adres +": '" + adress + "',\n"
-                            + birthda +": '"+ birthday + "',\n" + idLecturer +": "+ idLecturers + ",\n"
-                            + nam +": '"+ name + "',\n" + se +": '"+ sex + "',\n"
+                    String dulieu ="{\n" + "id : '" + id + "',\n" + "idT" +": "+ idLecturers + ",\n"
                             + secretNu +": "+ secretNum +"\n}";
 
                     // tạo mã QR từ các dữ liệu trên
@@ -162,27 +133,14 @@ public class MaQRCode extends AppCompatActivity {
         alertDialog.setPositiveButton("Có", new DialogInterface.OnClickListener() {
             @Override
             public void onClick( DialogInterface dialogInterface, int i ) {
-                mDatabase.child("User/parkingMan/information/").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabase.child("User/information/parkingMan/").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange( @NonNull DataSnapshot snapshot ) {
                         // kiểm tra có phải sinh viên
-                        if(snapshot.child("position").getValue().toString().equals("1")){
+                        if(snapshot.child("position").getValue().toString().equals("3")){
                             // get dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
                             String id = snapshot.getKey().toString();
-
-                            String adress = snapshot.child("adress").getValue().toString();
-                            String birthday = snapshot.child("birthday").getValue().toString();
-                            String classs = snapshot.child("class").getValue().toString();
                             String idStudent = snapshot.child("idStudent").getValue().toString();
-                            String name = snapshot.child("name").getValue().toString();
-                            String sex = snapshot.child("sex").getValue().toString();
-
-                            String adres = snapshot.child("adress").getKey().toString();
-                            String birthda = snapshot.child("birthday").getKey().toString();
-                            String clas = snapshot.child("class").getKey().toString();
-                            String idStuden = snapshot.child("idStudent").getKey().toString();
-                            String nam = snapshot.child("name").getKey().toString();
-                            String se = snapshot.child("sex").getKey().toString();
                             String secretNu = snapshot.child("secretNum").getKey().toString();
 
                             // tạo dữ liệu secretNum ngẫu nhiên
@@ -191,13 +149,11 @@ public class MaQRCode extends AppCompatActivity {
                             String secretNum = String.valueOf(num);
 
                             // thay đổi secretNum vừa tạo với cái dữ liệu cũ
-                            mDatabase.child("User/parkingMan/information/").child(id).child("secretNum").setValue(num);
+                            mDatabase.child("User/information/parkingMan/").child(id).child("secretNum").setValue(num);
 
 
                             // tổng hợp các dữ liệu
-                            String dulieu ="{\n" + "id : '" + id + "',\n" + adres +": '" + adress + "',\n" + birthda +": '"+ birthday + "',\n"
-                                    + clas +": '"+ classs + "',\n" + idStuden +": '"+ idStudent + "',\n"
-                                    + nam +": '"+ name + "',\n" + se +": '"+ sex + "',\n"
+                            String dulieu ="{\n" + "id : '" + id + "',\n" + "idT" +": '"+ idStudent + "',\n"
                                     + secretNu +": '"+ secretNum +"'\n}";
 
                             // tạo mã QR từ các dữ liệu trên
@@ -211,22 +167,11 @@ public class MaQRCode extends AppCompatActivity {
                         }
 
                         // kiểm tra có phải giảng viên
-                        else if(snapshot.child("position").getValue().toString().equals("0")){
+                        else if(snapshot.child("position").getValue().toString().equals("2")){
 
                             // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
                             String id = snapshot.getKey().toString();
-
-                            String adress = snapshot.child("adress").getValue().toString();
-                            String birthday = snapshot.child("birthday").getValue().toString();
                             String idLecturers = snapshot.child("idLecturers").getValue().toString();
-                            String name = snapshot.child("name").getValue().toString();
-                            String sex = snapshot.child("sex").getValue().toString();
-
-                            String adres = snapshot.child("adress").getKey().toString();
-                            String birthda = snapshot.child("birthday").getKey().toString();
-                            String idLecturer = snapshot.child("idLecturers").getKey().toString();
-                            String nam = snapshot.child("name").getKey().toString();
-                            String se = snapshot.child("sex").getKey().toString();
                             String secretNu = snapshot.child("secretNum").getKey().toString();
 
                             Random random = new Random();
@@ -234,12 +179,10 @@ public class MaQRCode extends AppCompatActivity {
                             String secretNum = String.valueOf(num);
 
                             // thay đổi secretNum vừa tạo với cái dữ liệu cũ
-                            mDatabase.child("User/parkingMan/information/").child(id).child("secretNum").setValue(num);
+                            mDatabase.child("User/information/parkingMan/").child(id).child("secretNum").setValue(num);
 
                             // tổng hợp các dữ liệu
-                            String dulieu ="{\n" + "id : '" + id + "',\n" + adres +": '" + adress + "',\n"
-                                    + birthda +": '"+ birthday + "',\n" + idLecturer +": "+ idLecturers + ",\n"
-                                    + nam +": '"+ name + "',\n" + se +": '"+ sex + "',\n"
+                            String dulieu ="{\n" + "id : '" + id + "',\n" + "idT" +": "+ idLecturers + ",\n"
                                     + secretNu +": "+ secretNum +"\n}";
 
                             // tạo mã QR từ các dữ liệu trên

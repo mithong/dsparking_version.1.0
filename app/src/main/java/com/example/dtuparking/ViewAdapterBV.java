@@ -17,7 +17,7 @@ public class ViewAdapterBV extends FragmentStatePagerAdapter {
             case 0:
                 return new HomeFragmentBV();
             case 1:
-                return new HistoryFragmentBV();
+                return new HistoryFragment();
 
             default:
                 return new HomeFragmentBV();

@@ -5,13 +5,13 @@
 
         <!-- Set màu nền-->
         <solid
-            android:color="#B6B3B3" >
+            android:color="#E8E7E7" >
         </solid>
 
         <!-- đặt thuộc tính màu và độ rộng của đường viền -->
         <stroke
             android:width="5dp"
-            android:color="#F5E6F8" >
+            android:color="#888788" >
         </stroke>
 
         <!-- các thuộc tính căn chỉnh-->
