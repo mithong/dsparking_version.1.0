@@ -13,19 +13,19 @@ public class ViewAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem( int position ) {
-        System.out.println("OK");
+        // chuyển các trang từ home sang history và ngược lại
         switch (position){
             case 0:
-                System.out.println("Chạy 0");
                 return new HomeFragment();
             case 1:
                 return new HistoryFragment();
-
+                // trang mặc định là home
             default:
                 return new HomeFragment();
         }
     }
 
+    // số layout liên kết với nhau
     @Override
     public int getCount() {
         return 2;

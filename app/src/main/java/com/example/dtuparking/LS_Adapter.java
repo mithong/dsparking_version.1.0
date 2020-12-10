@@ -74,7 +74,7 @@ public class LS_Adapter extends RecyclerView.Adapter<LS_Adapter.lsViewHolder>{
     public class lsViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView imgHinh;
-        private TextView txttb,txtngay,txttien,txtmagd;
+        private TextView txttb,txtngay,txttien;
         private LinearLayout lnClick;
 
         public lsViewHolder(@NonNull View itemView) {

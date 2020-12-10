@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#37111111"
     android:weightSum="10"
     android:backgroundTint="#FDFBF7FB"
@@ -9,41 +10,43 @@
     android:layout_width="match_parent">
 
     <LinearLayout
-        android:layout_weight="1.2"
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#570087"
         android:orientation="horizontal"
         android:weightSum="10"
-        android:background="#E8E7E7">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/back2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="25dp"
             android:layout_weight="1.5"
-            android:src="@drawable/ic_baseline_arrow_back_24"/>
+            android:src="@drawable/ic_baseline_arrow_back_ios_24" />
 
         <Button
-            android:layout_weight="8.5"
-            android:transitionName="button_QR"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="MÃ QR CODE"
-            android:textSize="25sp"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="25sp"
-            android:autoSizeMaxTextSize="35sp"
-            android:autoSizeStepGranularity="30sp"
-            android:padding="20dp"
-            android:textColor="#F83728"
+            android:layout_weight="8.5"
+            android:background="@drawable/gradient"
             android:gravity="center"
-            android:background="#E8E7E7"
-            android:layout_marginTop="0dp"/>
+            android:padding="20dp"
+            android:text="@string/maQr"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="25sp"
+            android:transitionName="button_QR" />
 
     </LinearLayout>
     <ImageView
         android:id="@+id/imgQrcode"
-        android:layout_weight="8.3"
+        android:layout_weight="8.5"
         android:background="#FDFBF7FB"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
@@ -53,9 +56,9 @@
         android:layout_height="0dp">
         <Button
             android:id="@+id/btnChangeCode"
-            android:text="Đổi mã QR"
-            android:background="#E8E7E7"
-            android:textColor="#F44336"
+            android:text="@string/doimaqr"
+            android:background="@drawable/gradient"
+            android:textColor="#ffffff"
             android:linksClickable="true"
             android:textSize="14sp"
             android:autoSizeTextType="uniform"

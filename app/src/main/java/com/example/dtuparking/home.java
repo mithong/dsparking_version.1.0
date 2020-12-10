@@ -1,7 +1,10 @@
 package com.example.dtuparking;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -12,11 +15,14 @@ import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Pair;
@@ -34,6 +40,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,6 +54,11 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Random;
 
 public class home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -59,6 +71,8 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
     FloatingActionButton fab;
     DatabaseReference mDatabase;
 
+    int id1 = 0;
+
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
@@ -67,7 +81,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         anhxa();
 
         // nhận dữ liệu từ login
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         final String id = intent.getStringExtra("idSinhVien");
 
 
@@ -190,8 +204,138 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
         UpdateHeader();
+
+        //  bắt sự kiện thêm lịch sử giao dịch thì sẽ có thông báo
+        mDatabase.child("History/parkingMan/").child("moneyOut").child(id).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String key = snapshot.getKey().toString();
+                String dateGet = snapshot.child("dateGet").getValue().toString();
+                SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date datengay = null;
+                try {
+                    datengay = sdfgoc.parse(dateGet);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Boolean isNoti = (Boolean) snapshot.child("isNoti").getValue();
+                // nếu bằng false thì sẻ có thông báo sau khi thông báo sẽ chuyển thành true
+                if(!isNoti){
+                    noficationGuiXe(sdfgoc.format(datengay));
+                    mDatabase.child("History/parkingMan/").child("moneyOut").child(id).child(key).child("isNoti").setValue(true);
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //  bắt sự kiện thêm lịch sử giao dịch thì sẽ có thông báo
+        mDatabase.child("History/parkingMan/").child("moneyIn").child(id).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String key = snapshot.getKey().toString();
+                String dateGet = snapshot.child("dateSend").getValue().toString();
+                String payMoney = snapshot.child("payMoney").getValue().toString();
+                SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date datengay = null;
+                try {
+                    datengay = sdfgoc.parse(dateGet);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Integer tien = Integer.parseInt(payMoney);
+                Boolean isNoti = (Boolean) snapshot.child("isNoti").getValue();
+                // nếu bằng false thì sẻ có thông báo sau khi thông báo sẽ chuyển thành true
+                if(!isNoti){
+                    noficationNaptien(tien/1000+".000 đ",sdfgoc.format(datengay));
+                    mDatabase.child("History/parkingMan/").child("moneyIn").child(id).child(key).child("isNoti").setValue(true);
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
+    // hiển thị thông báo nofication khi có lịch sử gửi xe thêm vào
+    private void noficationGuiXe(String ngay) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel =
+                    new NotificationChannel("n","n", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"n")
+                .setContentText("DTU PARKING")
+                .setSmallIcon(R.drawable.android_logo)
+                .setAutoCancel(true)
+                .setContentText(getResources().getString(R.string.bandathanhtoanluc)+" "+ ngay);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        Random random = new Random();
+        int value = random.nextInt(999-1) + 1;
+        managerCompat.notify(value,builder.build());
+    }
+
+    // hiển thị thông báo nofication khi được nạp tiền
+    private void noficationNaptien(String tien,String ngay) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel =
+                    new NotificationChannel("n","n", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,"n")
+                .setContentText("DTU PARKING")
+                .setSmallIcon(R.drawable.android_logo)
+                .setAutoCancel(true)
+                .setContentText(getResources().getString(R.string.bandaduocnap)+" "+tien+" "+getResources().getString(R.string.tubaoveluc)+" "+ngay);
+
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+        Random random = new Random();
+        int value = random.nextInt(9999-1001) + 1;
+        managerCompat.notify(value,builder.build());
+    }
 
     // ánh xạ các đối tượng
     private void anhxa() {
@@ -235,6 +379,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         }
     }
 
+    // viết hàm tạo class để đọc link hình
     private class LoadImagemenu extends AsyncTask<String, Void , Bitmap> {
         Bitmap bitmaphinh = null;
         @Override
@@ -266,8 +411,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
 
         ViewAdapter viewAdapter = new ViewAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
-        viewPager.setAdapter(viewAdapter); //lỗi ở đây
-        System.out.println("========================");
+        viewPager.setAdapter(viewAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled( int position, float positionOffset, int positionOffsetPixels ) {
@@ -366,18 +510,19 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
     // hỏi khi nhấn vào đăng xuất
     private  void XacNhanDangXuat(){
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(home.this);
-        alertDialog.setTitle("Thông Báo!!!");
+        alertDialog.setTitle(getResources().getString(R.string.thongbao));
         alertDialog.setIcon(R.mipmap.ic_launcher);
-        alertDialog.setMessage("Bạn có muốn đăng xuất khỏi ứng dụng không ?");
+        alertDialog.setMessage(getResources().getString(R.string.Bancomuondangxuat));
 
-        alertDialog.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick( DialogInterface dialogInterface, int i ) {
                 Intent intent = new Intent(home.this,login.class);
+                intent.putExtra("ktra",false);
                 startActivity(intent);
             }
         });
-        alertDialog.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick( DialogInterface dialogInterface, int i ) {
 
@@ -386,6 +531,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         alertDialog.show();
     }
 
+    // cập nhật phần header
     private void UpdateHeader(){
         NavigationView navigationView1 = (NavigationView) findViewById(R.id.navigationview);
         View view = navigationView1.getHeaderView(0);
@@ -435,7 +581,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         });
     }
 
-
+    // xử lí cho phép việc xử cho phép dùng camera
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -444,6 +590,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         }
     }
 
+    // thoát ứng dụng
     @Override
     public void onBackPressed() {
         androidx.appcompat.app.AlertDialog.Builder b =new androidx.appcompat.app.AlertDialog.Builder(home.this);
@@ -453,6 +600,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
             @Override
             public void onClick(DialogInterface dialog, int which){
                 finish();
+                System.exit(0);
             }
         });
         b.setNegativeButton("No", new DialogInterface.OnClickListener() {

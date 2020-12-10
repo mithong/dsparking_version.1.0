@@ -33,29 +33,37 @@ public class MainActivity extends AppCompatActivity {
         imglogo.setAnimation(top);
         txtlogo.setAnimation(bottom);
 
-        // tạo hiệu ứng chuyển trang với thời gian khi animation thực hiện
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(MainActivity.this,login.class);
+        if(CheckInternet.isConnect(getBaseContext())){
+            // tạo hiệu ứng chuyển trang với thời gian khi animation thực hiện
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(MainActivity.this,login.class);
+                    intent.putExtra("ktra",true);
 
-                Pair[] pairs = new Pair[2];
-                pairs[0] = new Pair<View,String>(imglogo,"image_name");
-                pairs[1] = new Pair<View,String>(txtlogo,"text_name");
+                    Pair[] pairs = new Pair[2];
+                    pairs[0] = new Pair<View,String>(imglogo,"image_name");
+                    pairs[1] = new Pair<View,String>(txtlogo,"text_name");
 
-                // hệ diều hành android phải trên 5.0 mới có animation
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs);
-                    startActivity(intent,options.toBundle());
+                    // hệ diều hành android phải trên 5.0 mới có animation
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this,pairs);
+                        startActivity(intent,options.toBundle());
+
+                    }
+                    else {
+                        startActivity(intent);
+                        finish();
+                    }
 
                 }
-                else {
-                    startActivity(intent);
-                    finish();
-                }
+            },3000);
+        }
+        else {
+            Intent intent = new Intent(MainActivity.this,MaQRCode.class);
+            startActivity(intent);
+        }
 
-            }
-        },1000);
     }
 
     private void anhxa() {

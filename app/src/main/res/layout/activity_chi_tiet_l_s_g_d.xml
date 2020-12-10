@@ -5,7 +5,7 @@
     android:weightSum="10"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="#CDC8C8"
+    android:background="#ffffff"
     android:layout_height="match_parent"
     tools:context=".ChiTietLSGD">
 
@@ -13,8 +13,8 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.2"
-        android:background="#E8E7E7"
+        android:layout_weight="1"
+        android:background="#570087"
         android:orientation="horizontal"
         android:weightSum="10"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,30 +23,29 @@
             android:id="@+id/back2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="25dp"
             android:layout_weight="1.5"
-            android:src="@drawable/ic_baseline_arrow_back_24" />
+            android:src="@drawable/ic_baseline_arrow_back_ios_24" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="8.5"
-            android:background="#E8E7E7"
+            android:background="@drawable/gradient"
             android:gravity="center"
             android:padding="20dp"
-            android:text="CHI TIẾT GIAO DỊCH"
-            android:textColor="#F83728"
-            android:textSize="25sp"
+            android:text="@string/chiTietGiaoDich"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
             android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="25sp"
-            android:autoSizeMaxTextSize="35sp"
-            android:autoSizeStepGranularity="30sp"
+            android:autoSizeMinTextSize="20sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeStepGranularity="25sp"
             android:transitionName="button_QR" />
 
     </LinearLayout>
 
     <LinearLayout
-
-        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2.5"
@@ -64,7 +63,7 @@
             android:autoSizeMinTextSize="20sp"
             android:autoSizeMaxTextSize="30sp"
             android:autoSizeStepGranularity="25sp"
-            android:textColor="#222222"
+            android:textColor="#A600FF"
             android:gravity="center"
             android:layout_gravity="center"/>
         <TextView
@@ -77,20 +76,20 @@
             android:autoSizeMinTextSize="30sp"
             android:autoSizeMaxTextSize="40sp"
             android:autoSizeStepGranularity="35sp"
-            android:textColor="#222222"
+            android:textColor="#C60505"
             android:gravity="center"
             android:layout_gravity="center"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Thành công"
+            android:text="@string/thanhCong"
             android:textSize="20sp"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="20sp"
             android:autoSizeMaxTextSize="30sp"
             android:autoSizeStepGranularity="25sp"
-            android:textColor="#4CAF50"
+            android:textColor="#267329"
             android:gravity="center"
             android:layout_gravity="center"/>
     </LinearLayout>
@@ -98,6 +97,8 @@
     <LinearLayout
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="5"
@@ -114,25 +115,25 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Mã giao dịch : "
+                android:text="@string/magd"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#888181"/>
+                android:textColor="#68019F"/>
             <TextView
                 android:id="@+id/txt_chitietmagd"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="left"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#222222"/>
+                android:textColor="#8A8888"/>
         </LinearLayout>
         <LinearLayout
             android:layout_marginLeft="10dp"
@@ -147,25 +148,25 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Ngày giao dịch : "
+                android:text="@string/ngaygd"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#888181"/>
+                android:textColor="#68019F"/>
             <TextView
                 android:id="@+id/txt_chitietngaygd"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="left"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#222222"/>
+                android:textColor="#8A8888"/>
         </LinearLayout>
         <LinearLayout
             android:layout_marginLeft="10dp"
@@ -180,25 +181,25 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Thời gian giao dịch : "
+                android:text="@string/tgiangd"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#888181"/>
+                android:textColor="#68019F"/>
             <TextView
                 android:id="@+id/txt_chitiettggd"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="left"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#222222"/>
+                android:textColor="#8A8888"/>
         </LinearLayout>
         <LinearLayout
             android:layout_marginLeft="10dp"
@@ -212,25 +213,25 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Kiểu giao dịch : "
+                android:text="@string/kieugd"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#888181"/>
+                android:textColor="#68019F"/>
             <TextView
                 android:id="@+id/txt_chitietkieugd"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="left"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#222222"/>
+                android:textColor="#8A8888"/>
         </LinearLayout>
         <LinearLayout
             android:layout_marginLeft="10dp"
@@ -245,25 +246,25 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Mã người chuyển tiền : "
+                android:text="@string/mangct"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#888181"/>
+                android:textColor="#68019F"/>
             <TextView
                 android:id="@+id/txt_chitietmanct"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="left"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#222222"/>
+                android:textColor="#8A8888"/>
         </LinearLayout>
         <LinearLayout
             android:layout_marginLeft="10dp"
@@ -279,25 +280,25 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Biển Số XE : "
+                android:text="@string/biensoxe"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#888181"/>
+                android:textColor="#68019F"/>
             <TextView
                 android:id="@+id/txt_biensoxe"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="left"
                 android:textSize="14sp"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMinTextSize="14sp"
                 android:autoSizeMaxTextSize="20sp"
                 android:autoSizeStepGranularity="17sp"
-                android:textColor="#222222"/>
+                android:textColor="#8A8888"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,11 +37,11 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState ) {
         View view = inflater.inflate(R.layout.fragmenthome,container,false);
+        // ánh xạ
         txttien = (TextView) view.findViewById(R.id.txtsotien);
         txttrangthai = (TextView) view.findViewById(R.id.txttrangthai);
         txtsoluot = (TextView) view.findViewById(R.id.txtluotguixe);
         txtlanguixe = (TextView) view.findViewById(R.id.txtlanguixe);
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
         setTien();
         setLuotguixevaLuotgui();
@@ -49,17 +50,23 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+    // hàm lấy thông tin tiền trong firebase
     private  void setTien(){
         home hom = (home) getActivity();
         final String id = hom.getData();
         mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange( @NonNull DataSnapshot snapshot ) {
+                // kiểm tra có phải sinh viên
                 if(snapshot.child("position").getValue().toString().equals("3")){
                     String tien = snapshot.child("money").getValue().toString();
                     Integer tien2 = Integer.parseInt(tien);
-                    txttien.setText(tien2/1000+".000 VNĐ");
-                } else if(snapshot.child("position").getValue().toString().equals("2")){
+                    // định dạng kiểu tiền
+                    DecimalFormat formatter = new DecimalFormat("###,###,###");
+                    txttien.setText(formatter.format(tien2)+" VNĐ");
+                }
+                // kiểm tra có phải giảng viên
+                else if(snapshot.child("position").getValue().toString().equals("2")){
                     txttien.setText("null");
                 }
             }
@@ -70,18 +77,22 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+    // hàm đếm số lượt gửi xe và lần gửi xe gần nhất
     private void setLuotguixevaLuotgui(){
         home hom = (home) getActivity();
         final String id = hom.getData();
         final int[] i = {0};
-        final Date[] dateLast = {null};
+        Date dateLast = null;
         final String[] coso = {""};
+        // chuyển string thành date
         SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            dateLast[0] = sdfgoc.parse("2020-1-1 12:12:12");
+            dateLast = sdfgoc.parse("2020-01-01 00:00:00");
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        // kiểm tra  dữ liệu trong firebase
+        final Date[] finalDateLast = {dateLast};
         mDatabase.child("History/parkingMan/").child("moneyOut").child(id).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -89,6 +100,7 @@ public class HomeFragment extends Fragment {
 
                 // khai báo hàm ngày
                 final Calendar cal = Calendar.getInstance();
+
                 // chuyển string thành date
                 SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 SimpleDateFormat sdf = new SimpleDateFormat("ww");
@@ -107,7 +119,8 @@ public class HomeFragment extends Fragment {
                     i[0] = i[0] + 1;
 
                 }
-                if(date1.compareTo(dateLast[0])>=0){
+                // kiểm tra cơ sở
+                if(date1.compareTo(finalDateLast[0])>=0){
                     String place = snapshot.child("place").getValue().toString();
                     if(place.equals("0")){
                         coso[0] = "Quang Trung";
@@ -118,10 +131,11 @@ public class HomeFragment extends Fragment {
                     else if(place.equals("2")){
                         coso[0] = "Nguyễn Văn Linh";
                     }
-                    dateLast[0] = date1;
+                    finalDateLast[0] = date1;
                 }
-                txtsoluot.setText((i[0])+" lần gửi xe ");
-                txtlanguixe.setText("Vào ngày "+sdf2.format(dateLast[0])+" tại cơ sở "+coso[0]);
+                // gán dữ liệu
+                txtsoluot.setText((i[0])+" "+getResources().getString(R.string.languixe));
+                txtlanguixe.setText(getResources().getString(R.string.vaongay)+" "+sdf2.format(finalDateLast[0])+getResources().getString(R.string.taicosonao)+" "+coso[0]);
 
             }
 
@@ -146,31 +160,32 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+    // kiểm tra có đang giữ xe tại trường hay không
     private void setTrangthai(){
         home hom = (home) getActivity();
         final String id = hom.getData();
 
 
         try {
-            mDatabase.child("APIParking/Data/Location/").addValueEventListener(new ValueEventListener() {
+            mDatabase.child("APIParking/Parking/IdList/").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     try {
-                        if(snapshot.child("0/idUser/").child(id).getValue().toString() != null){
-                            txttrangthai.setText("Bạn Đang Gửi Xe Tại Cơ Sở Quang Trung");
+                        if(snapshot.child("0").child(id).getValue().toString() != null){
+                            txttrangthai.setText(getResources().getString(R.string.danggiuxetaiqt));
                         }
                     }catch (Exception e){
                         try {
-                            if(snapshot.child("1/idUser/").child(id).getValue().toString() != null){
-                                txttrangthai.setText("Bạn Đang Gửi Xe Tại Cơ Sở Hòa Khánh");
+                            if(snapshot.child("1").child(id).getValue().toString() != null){
+                                txttrangthai.setText(getResources().getString(R.string.danggiuxetaihk));
                             }
                         }catch (Exception e1){
                             try {
-                                if(snapshot.child("2/idUser/").child(id).getValue().toString() != null){
-                                    txttrangthai.setText("Bạn Đang Gửi Xe Tại Cơ Sở Nguyễn Văn Linh");
+                                if(snapshot.child("2").child(id).getValue().toString() != null){
+                                    txttrangthai.setText(getResources().getString(R.string.danggiuxetainvl));
                                 }
                             }catch (Exception e2){
-                                txttrangthai.setText("Bạn Không Gửi Xe Tại Trường");
+                                txttrangthai.setText(getResources().getString(R.string.khonggiuxe));
                             }
                         }
                     }

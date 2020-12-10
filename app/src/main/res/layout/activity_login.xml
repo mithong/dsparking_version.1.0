@@ -27,6 +27,7 @@
         android:gravity="center"
         android:text="@string/chaomung"
         android:textSize="25sp"
+        android:textColor="#990BB1"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="25sp"
         android:autoSizeMaxTextSize="35sp"
@@ -75,7 +76,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/TIedtDn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -125,7 +127,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:background="#0C0C0C"
+        android:background="@drawable/gradient"
         android:fontFamily="sans-serif"
         android:text="@string/dangnhap"
         android:textColor="#F7F7FA"

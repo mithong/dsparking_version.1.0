@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,6 +42,10 @@ public class ChiTietLSGD extends AppCompatActivity {
         final String id = intent.getStringExtra("id");
         anhxa();
 
+        // định dạng kiểu tiền
+        final DecimalFormat formatter = new DecimalFormat("###,###,###");
+
+        // kiểm tra dữ liệu tiền vào
         mDatabase.child("History/parkingMan").child("moneyIn").child(id).child(MaGD).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -51,13 +56,14 @@ public class ChiTietLSGD extends AppCompatActivity {
                     String Method = snapshot.child("method").getValue().toString();
                     String idPay = snapshot.child("idPay").getValue().toString();
 
+                    // chuyển string thành int
                     Integer tien2 = Integer.parseInt(tien);
 
+                    // định dạng kiểu ngày
                     SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     SimpleDateFormat sdfngay = new SimpleDateFormat("yyyy-MM-dd");
                     SimpleDateFormat sdfgio = new SimpleDateFormat("HH:mm:ss");
                     Date date1 = null;
-
                     try {
                         date1 = sdfgoc.parse(datePay);
                     }catch (Exception e) {
@@ -65,19 +71,21 @@ public class ChiTietLSGD extends AppCompatActivity {
                     }
 
 
-                    txtTb.setText("NẠP TIỀN VÀO VÍ");
-                    txtTien.setTextColor(Color.parseColor("#4CAF50"));
-                    txtTien.setText("+ "+(tien2/1000)+".000 VNĐ");
+                    // gán dữ liệu
+                    txtTb.setText(getResources().getString(R.string.napTienVaoVi));
+                    txtTien.setTextColor(Color.parseColor("#267329"));
+                    txtTien.setText("+ "+formatter.format(tien2)+" VNĐ");
                     txtmagd.setText(idPay);
                     txtngaygd.setText(sdfngay.format(date1));
                     txttgian.setText(sdfgio.format(date1));
                     if(Method.equals("0")){
-                        txtkieugd.setText("Nhận tiền từ bảo vệ");
+                        txtkieugd.setText(getResources().getString(R.string.nhantientubv));
                     }
                     txtmanguoichuyentien.setText(IdSender);
                     txtrenamebiensoxe.setVisibility(View.INVISIBLE);
 
                 }catch (Exception e){
+                    // kiểm tra dữ liệu tiền ra
                     mDatabase.child("History/parkingMan").child("moneyOut").child(id).child(MaGD).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -92,8 +100,10 @@ public class ChiTietLSGD extends AppCompatActivity {
                                 String bienso = snapshot.child("plateLicense").getValue().toString();
                                 String idPay = snapshot.child("idPay").getValue().toString();
 
+                                // chuyển string thành int
                                 Integer tien2 = Integer.parseInt(tien);
 
+                                // định dạng kiểu ngày
                                 SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 Date date1 = null;
                                 Date date2 = null;
@@ -104,29 +114,31 @@ public class ChiTietLSGD extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
 
-                                txtTb.setText("THANH TOÁN TIỀN GỬI XE");
-                                txtTien.setTextColor(Color.parseColor("#F44336"));
-                                txtTien.setText("- "+(tien2/1000)+".000 VNĐ");
+                                // gán dữ liệu
+                                txtTb.setText(getResources().getString(R.string.thanhtoantienguixe));
+                                txtTien.setTextColor(Color.parseColor("#C60505"));
+                                txtTien.setText("- "+formatter.format(tien2)+" VNĐ");
                                 txtmagd.setText(idPay);
-                                txtngguixe.setText("Ngày giờ gửi xe: ");
-                                txtngaynhanxe.setText("Ngày giờ nhận xe: ");
+                                txtngguixe.setText(getResources().getString(R.string.ngaygioguixe));
+                                txtngaynhanxe.setText(getResources().getString(R.string.ngaygionhanxe));
                                 txtngaygd.setText(sdfgoc.format(date1));
                                 txttgian.setText(sdfgoc.format(date2));
                                 if(method.equals("0")){
-                                    txtkieugd.setText("Thanh toán tiền tại bảo vệ");
+                                    txtkieugd.setText(getResources().getString(R.string.thanhtoantientaibaove));
                                 }
-                                txtrenamemdngchuyen.setText("Tại Cơ Sở: ");
+                                txtrenamemdngchuyen.setText(getResources().getString(R.string.taicoso));
                                 if(coso.equals("0")){
-                                    txtmanguoichuyentien.setText("Cơ sở Quang Trung");
+                                    txtmanguoichuyentien.setText("Quang Trung");
                                 }
                                 else  if(coso.equals("1")){
-                                    txtmanguoichuyentien.setText("Cơ sở Hòa Khánh");
+                                    txtmanguoichuyentien.setText("Hòa Khánh");
                                 }
                                 if(coso.equals("2")){
-                                    txtmanguoichuyentien.setText("Cơ sở Nguyễn Văn Linh");
+                                    txtmanguoichuyentien.setText("Nguyễn Văn Linh");
                                 }
                                 txtbiensoxe.setText(bienso);
                             }catch (Exception e1){
+                                // kiểm tra dữ liệu của bảo vệ
                                 mDatabase.child("History/guard/").child(id).child(MaGD).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -136,8 +148,10 @@ public class ChiTietLSGD extends AppCompatActivity {
                                             String idStudent = snapshot.child("idStudent").getValue().toString();
                                             String dated = snapshot.child("dateSend").getValue().toString();
 
+                                            // chuyển string thành int
                                             Integer tien2 = Integer.parseInt(price);
 
+                                            // định dạng kiểu ngày
                                             SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                             SimpleDateFormat sdfngay = new SimpleDateFormat("yyyy-MM-dd");
                                             SimpleDateFormat sdfgio = new SimpleDateFormat("HH:mm:ss");
@@ -149,16 +163,17 @@ public class ChiTietLSGD extends AppCompatActivity {
                                                 e.printStackTrace();
                                             }
 
-                                            txtTb.setText("CHUYỂN KHOẢN CHO SINH VIÊN");
-                                            txtTien.setTextColor(Color.parseColor("#4CAF50"));
-                                            txtTien.setText("- "+(tien2/1000)+".000 VNĐ");
+                                            // gán dữ liệu
+                                            txtTb.setText(getResources().getString(R.string.chuyentienchosinhvien));
+                                            txtTien.setTextColor(Color.parseColor("#267329"));
+                                            txtTien.setText("+ "+formatter.format(tien2)+" VNĐ");
                                             txtmagd.setText(magd);
                                             txtngaygd.setText(sdfngay.format(date1));
                                             txttgian.setText(sdfgio.format(date1));
-                                            txtkieugd.setText("Chuyền tiền cho sinh viên");
-                                            txtrenamemdngchuyen.setText("Mã sinh viên nhận tiền: ");
+                                            txtkieugd.setText(getResources().getString(R.string.chuyentienchosinhvien));
+                                            txtrenamemdngchuyen.setText(getResources().getString(R.string.masvnhantien));
                                             txtmanguoichuyentien.setText(idStudent);
-                                            txtrenamebiensoxe.setText("Mã Bảo Vệ Chuyển Tiền: ");
+                                            txtrenamebiensoxe.setText(getResources().getString(R.string.mabvchuyentien));
                                             mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {

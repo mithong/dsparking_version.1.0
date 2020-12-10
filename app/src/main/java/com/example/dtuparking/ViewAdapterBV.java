@@ -13,6 +13,7 @@ public class ViewAdapterBV extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
+        // chuyển các trang từ home sang history và ngược lại
         switch (position){
             case 0:
                 return new HomeFragmentBV();
@@ -24,6 +25,7 @@ public class ViewAdapterBV extends FragmentStatePagerAdapter {
         }
     }
 
+    // số layout liên kết với nhau
     @Override
     public int getCount() {
         return 2;

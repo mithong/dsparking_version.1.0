@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="5dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:orientation="vertical"
@@ -15,9 +15,9 @@
         android:autoSizeMinTextSize="20sp"
         android:autoSizeMaxTextSize="30sp"
         android:autoSizeStepGranularity="25sp"
-        android:background="#FFF8F8"
+        android:background="@drawable/gradient"
         android:text="catalogy1"
-        android:textColor="#EF7D74"/>
+        android:textColor="#ffffff"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_ls"

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -31,6 +32,7 @@ public class MaQRCode extends AppCompatActivity {
     private ImageView imgQr,imgback;
     private DatabaseReference mDatabase;
     private Button btnDoiMa;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -42,6 +44,7 @@ public class MaQRCode extends AppCompatActivity {
         imgback = (ImageView) findViewById(R.id.back2);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         btnDoiMa =(Button) findViewById(R.id.btnChangeCode);
+        sharedPreferences = getSharedPreferences("dataQR",MODE_PRIVATE);
 
         //lấy dữ liệu id từ home
         Intent intent = getIntent();
@@ -54,63 +57,94 @@ public class MaQRCode extends AppCompatActivity {
             }
         });
 
-        // truy ấn tới mã QRCODE
-        mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange( @NonNull DataSnapshot snapshot ) {
-                // kiểm tra có phải sinh viên
-                if(snapshot.child("position").getValue().toString().equals("3")){
+        if(CheckInternet.isConnect(getBaseContext())){
+            // truy ấn tới mã QRCODE
+            mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange( @NonNull DataSnapshot snapshot ) {
+                    // kiểm tra có phải sinh viên
+                    if(snapshot.child("position").getValue().toString().equals("3")){
 
-                    // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
-                    String id = snapshot.getKey().toString();
-                    String idStudent = snapshot.child("idStudent").getValue().toString();
-                    String secretNum = snapshot.child("secretNum").getValue().toString();
-                    String secretNu = snapshot.child("secretNum").getKey().toString();
+                        // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
+                        String id = snapshot.getKey().toString();
+                        String idStudent = snapshot.child("idStudent").getValue().toString();
+                        String name = snapshot.child("name").getValue().toString();
+                        String secretNum = snapshot.child("secretNum").getValue().toString();
 
-                    String dulieu ="{\n" + "id : '" + id + "',\n" + "idT" +": '"+ idStudent + "',\n"
-                            + secretNu +": '"+ secretNum +"'\n}";
+                        String dulieu = id+"|"+idStudent+"|"+name+"|"+secretNum;
 
-                    // tạo mã QR từ các dữ liệu trên
-                    QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
-                    try {
-                        Bitmap bitmap = qrgEncoder.encodeAsBitmap();
-                        imgQr.setImageBitmap(bitmap);
-                    } catch ( WriterException e) {
-                        e.printStackTrace();
-                    }
-                }
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("id",id);
+                        editor.putString("idT",idStudent);
+                        editor.putString("name",name);
+                        editor.putString("secretNum",secretNum);
+                        editor.commit();
 
-                // kiểm tra có phải giảng viên
-                else if(snapshot.child("position").getValue().toString().equals("2")){
-                    // set dữ liệu string để tạo mã Qr dựa vào thông tin giảng viên
-                    String id = snapshot.getKey().toString();
-                    String idLecturers = snapshot.child("idLecturers").getValue().toString();
-                    String secretNum = snapshot.child("secretNum").getValue().toString();
-                    String secretNu = snapshot.child("secretNum").getKey().toString();
-
-                    // tổng hợp các dữ liệu
-                    String dulieu ="{\n" + "id : '" + id + "',\n" + "idT" +": "+ idLecturers + ",\n"
-                            + secretNu +": "+ secretNum +"\n}";
-
-                    // tạo mã QR từ các dữ liệu trên
-                    QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
-                    try {
-                        Bitmap bitmap = qrgEncoder.encodeAsBitmap();
-                        imgQr.setImageBitmap(bitmap);
-                    } catch (WriterException e) {
-                        e.printStackTrace();
+                        // tạo mã QR từ các dữ liệu trên
+                        QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
+                        try {
+                            Bitmap bitmap = qrgEncoder.encodeAsBitmap();
+                            imgQr.setImageBitmap(bitmap);
+                        } catch ( WriterException e) {
+                            e.printStackTrace();
+                        }
                     }
 
+                    // kiểm tra có phải giảng viên
+                    else if(snapshot.child("position").getValue().toString().equals("2")){
+                        // set dữ liệu string để tạo mã Qr dựa vào thông tin giảng viên
+                        String id = snapshot.getKey().toString();
+                        String name = snapshot.child("name").getValue().toString();
+                        String idLecturers = snapshot.child("idLecturers").getValue().toString();
+                        String secretNum = snapshot.child("secretNum").getValue().toString();
+
+                        // tổng hợp các dữ liệu
+                        String dulieu = id+"|"+idLecturers+"|"+name+"|"+secretNum;
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("id",id);
+                        editor.putString("idT",idLecturers);
+                        editor.putString("name",name);
+                        editor.putString("secretNum",secretNum);
+                        editor.commit();
+
+                        // tạo mã QR từ các dữ liệu trên
+                        QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
+                        try {
+                            Bitmap bitmap = qrgEncoder.encodeAsBitmap();
+                            imgQr.setImageBitmap(bitmap);
+                        } catch (WriterException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+
                 }
 
+                @Override
+                public void onCancelled( @NonNull DatabaseError error ) {
 
+                }
+            });
+        }
+        else {
+            String id1 = sharedPreferences.getString("id","");
+            String idT = sharedPreferences.getString("idT","");
+            String name = sharedPreferences.getString("name","");
+            String secretNum = sharedPreferences.getString("secretNum","");
+            // tổng hợp các dữ liệu
+            String dulieu =id1+"|"+idT+"|"+name+"|"+secretNum;
+            // tạo mã QR từ các dữ liệu trên
+            QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
+            try {
+                Bitmap bitmap = qrgEncoder.encodeAsBitmap();
+                imgQr.setImageBitmap(bitmap);
+            } catch (WriterException e) {
+                e.printStackTrace();
             }
+        }
 
-            @Override
-            public void onCancelled( @NonNull DatabaseError error ) {
-
-            }
-        });
 
         btnDoiMa.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,15 +156,15 @@ public class MaQRCode extends AppCompatActivity {
 
     private  void XacNhanDoi(){
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MaQRCode.this);
-        alertDialog.setTitle("Thông Báo!!!");
+        alertDialog.setTitle(getResources().getString(R.string.thongbao));
         alertDialog.setIcon(R.mipmap.ic_launcher);
-        alertDialog.setMessage("Bạn có muốn thay đổi mã QR CODE hiện tại không ?");
+        alertDialog.setMessage(getResources().getString(R.string.bancomuondoi));
 
         // lấy dữ liệu id từ home
         Intent intent = getIntent();
         final String id = intent.getStringExtra("idSinhVien");
 
-        alertDialog.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick( DialogInterface dialogInterface, int i ) {
                 mDatabase.child("User/information/parkingMan/").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -138,23 +172,21 @@ public class MaQRCode extends AppCompatActivity {
                     public void onDataChange( @NonNull DataSnapshot snapshot ) {
                         // kiểm tra có phải sinh viên
                         if(snapshot.child("position").getValue().toString().equals("3")){
-                            // get dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
+                            // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
                             String id = snapshot.getKey().toString();
                             String idStudent = snapshot.child("idStudent").getValue().toString();
-                            String secretNu = snapshot.child("secretNum").getKey().toString();
+                            String name = snapshot.child("name").getValue().toString();
 
                             // tạo dữ liệu secretNum ngẫu nhiên
                             Random random = new Random();
                             int num = random.nextInt(100000);
-                            String secretNum = String.valueOf(num);
+                            String secretNu = String.valueOf(num);
 
                             // thay đổi secretNum vừa tạo với cái dữ liệu cũ
                             mDatabase.child("User/information/parkingMan/").child(id).child("secretNum").setValue(num);
 
-
-                            // tổng hợp các dữ liệu
-                            String dulieu ="{\n" + "id : '" + id + "',\n" + "idT" +": '"+ idStudent + "',\n"
-                                    + secretNu +": '"+ secretNum +"'\n}";
+                            // Tổng hợp dữ liệu
+                            String dulieu = id+"|"+idStudent+"|"+name+"|"+secretNu;
 
                             // tạo mã QR từ các dữ liệu trên
                             QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
@@ -171,8 +203,8 @@ public class MaQRCode extends AppCompatActivity {
 
                             // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
                             String id = snapshot.getKey().toString();
+                            String name = snapshot.child("name").getValue().toString();
                             String idLecturers = snapshot.child("idLecturers").getValue().toString();
-                            String secretNu = snapshot.child("secretNum").getKey().toString();
 
                             Random random = new Random();
                             int num = random.nextInt(100000);
@@ -182,8 +214,7 @@ public class MaQRCode extends AppCompatActivity {
                             mDatabase.child("User/information/parkingMan/").child(id).child("secretNum").setValue(num);
 
                             // tổng hợp các dữ liệu
-                            String dulieu ="{\n" + "id : '" + id + "',\n" + "idT" +": "+ idLecturers + ",\n"
-                                    + secretNu +": "+ secretNum +"\n}";
+                            String dulieu = id+"|"+idLecturers+"|"+name+"|"+secretNum;
 
                             // tạo mã QR từ các dữ liệu trên
                             QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
@@ -204,7 +235,7 @@ public class MaQRCode extends AppCompatActivity {
             }
         });
 
-        alertDialog.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick( DialogInterface dialogInterface, int i ) {
 

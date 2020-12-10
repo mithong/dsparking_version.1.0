@@ -9,30 +9,32 @@
     tools:context=".LienLac">
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.2"
-        android:background="#E8E7E7"
+        android:background="#570087"
         android:orientation="horizontal"
         android:weightSum="10"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/backll"
+            android:id="@+id/back11"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_margin="25dp"
             android:layout_weight="1.5"
-            android:src="@drawable/ic_baseline_arrow_back_24" />
+            android:src="@drawable/ic_baseline_arrow_back_ios_24" />
 
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="8.5"
-            android:background="#E8E7E7"
+            android:background="@drawable/gradient"
             android:gravity="center"
             android:padding="20dp"
-            android:text="Liên lạc"
-            android:textColor="#F83728"
+            android:text="@string/lienlac"
+            android:textColor="#ffffff"
             android:textSize="25sp"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="25sp"
@@ -68,7 +70,7 @@
             android:layout_weight="9"
             android:layout_height="match_parent"
             android:gravity="left|center"
-            android:text="Địa chỉ: 254 Nguyễn Văn Linh, Quận Thanh Khê - Tp. Đà Nẵng"
+            android:text="@string/diachi"
             android:textColor="#050000"
             android:textSize="20sp"
             android:autoSizeTextType="uniform"
@@ -94,7 +96,7 @@
             android:layout_weight="4"
             android:layout_height="match_parent"
             android:gravity="left|center"
-            android:text="Số Điện Thoại:"
+            android:text="@string/sodienthoai"
             android:textColor="#050000"
             android:textSize="20sp"
             android:autoSizeTextType="uniform"

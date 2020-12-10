@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#37E8C1F1"
+    android:background="#ffffff"
     tools:context=".MainActivity">
 
     <ImageView
@@ -34,7 +34,7 @@
         android:layout_marginRight="174dp"
         android:fontFamily="sans-serif-medium"
         android:text="DTU PARKING"
-        android:textColor="#FF5722"
+        android:textColor="#990BB1"
         android:textSize="45sp"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="45sp"

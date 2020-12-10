@@ -2,14 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dtuparking">
 
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
-
 
     <application
         android:allowBackup="true"
@@ -18,7 +16,8 @@
         android:roundIcon="@drawable/android_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LienLac"></activity>
+
+        <activity android:name=".LienLac" />
         <activity android:name=".PhanHoi" />
         <activity android:name=".ThongTinSV" />
         <activity android:name=".ChiTietLSGD" />

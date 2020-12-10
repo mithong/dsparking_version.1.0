@@ -1,16 +1,116 @@
 <resources>
+    // login
     <string name="app_name">DTUPARKING</string>
-    <string name="chaomung">xin chào bạn,\nchào mừng trở lại</string>
-    <string name="dangnhapdetieptuc">đăng nhập để tiếp tục</string>
-    <string name="tendangnhap">Tên đăng nhập </string>
-    <string name="matkhau">Mật khẩu </string>
-    <string name="luumatkhau">Lưu mật khẩu </string>
-    <string name="dangnhap">Đăng nhập </string>
-    <string name="key">AIzaSyAilSJiYD_7XWd3dC9wyqOM7k_8uu2l5zY</string>
+    <string name="chaomung">Hello,\nWelcome back</string>
+    <string name="dangnhapdetieptuc">Log in to continue</string>
+    <string name="tendangnhap">Username </string>
+    <string name="matkhau">Password </string>
+    <string name="luumatkhau">Save Password </string>
+    <string name="dangnhap">Confirm </string>
+    <string name="nhapusername">Please enter Username </string>
+    <string name="nhapmatkhau">Please enter Password </string>
+    <string name="saiusername">Wrong username</string>
+    <string name="saimatkhau">Wrong Password </string>
+    <string name="dangnhapthanhcong">Log in successfully </string>
+    <string name="ktramang">Please check the network connection </string>
+
+    // home
+    <string name="trangchu">HOME</string>
+    <string name="lichsu">HISTORY</string>
+    <string name="thongtin">Information</string>
+    <string name="hotro">Support</string>
+    <string name="dangxuat">Log Out</string>
+    <string name="bandathanhtoanluc">You have paid the parking fee at </string>
+    <string name="bandaduocnap">You have been transfers </string>
+    <string name="tubaoveluc"> from guard at </string>
+    <string name="Bancomuondangxuat">Do you want to log out of this account ?</string>
+
+    // ChiTietLSGD
+    <string name="chiTietGiaoDich">TranSaction details</string>
+    <string name="napTienVaoVi">Deposit your wallet</string>
+    <string name="thanhCong">success</string>
+    <string name="magd">Transaction code :</string>
+    <string name="ngaygd">Transaction date :</string>
+    <string name="tgiangd">Transaction time :</string>
+    <string name="kieugd">Transaction type :</string>
+    <string name="mangct">Money transferer code :</string>
+    <string name="biensoxe">License plates :</string>
+    <string name="nhantientubv">Get money from Guard</string>
+    <string name="thanhtoantienguixe">Pay for parking</string>
+    <string name="ngaygioguixe">Parking date and time :</string>
+    <string name="ngaygionhanxe">Pick up date and time :</string>
+    <string name="thanhtoantientaibaove">Pay at Guard</string>
+    <string name="taicoso">At the campus :</string>
+    <string name="chuyentienchosinhvien">Tranfer money to student</string>
+    <string name="masvnhantien">Student code :</string>
+    <string name="mabvchuyentien">Guard code :</string>
+
+    // LienLac
+    <string name="lienlac">Comnunicate</string>
+    <string name="diachi">Address : 254 Nguyen Van Linh Street, Thanh Khe District - Da Nang City </string>
+    <string name="sodienthoai">Phone Number :</string>
+
+    // MaQR
+    <string name="maQr">QR CODE</string>
+    <string name="doimaqr">Change QR Code</string>
+    <string name="thongbao">Nofication !!!</string>
+    <string name="bancomuondoi">Do you want to change the existing QR code ?</string>
+
+    //PhanHoi
+    <string name="Phanhoi">Feedback</string>
+    <string name="Vuilongnhap">Please enter your comments, questions or feedback !!!</string>
+    <string name="guithanhcong">Send feedback Successfully</string>
+    <string name="hayguichochungtoi">Please send us your comments on the DTU PARKING application. In case of urgent need please click on the Communicate.</string>
+    <string name="gui">Send</string>
+
+    // ThongTinCaNhan
+    <string name="thongtincanhan">Personal Information</string>
+    <string name="doiavata">Change Avatar</string>
+    <string name="tenngdung">User name :</string>
+    <string name="ngaysinh">Date of birth :</string>
+    <string name="gioitinh">Sex :</string>
+    <string name="diachi2">Address :</string>
+    <string name="masv">Student code :</string>
+    <string name="lophoc">Class :</string>
+    <string name="nam">Male</string>
+    <string name="nu">Female</string>
+    <string name="magiangvien">Lecturer code :</string>
+    <string name="mabaove">Guard code :</string>
+    <string name="doiavatathanhcong">Change Avatar Successfully</string>
+
+    // homesv
+    <string name="sodutrongtaikhoan">Balance in account :</string>
+    <string name="soluotguixetrongtuan">Number parked lots in week :</string>
+    <string name="trangthaicuaxe">Vehicle status :</string>
+    <string name="languixegannhat">Last parking time :</string>
+    <string name="languixe">parkings times</string>
+    <string name="vaongay">On the </string>
+    <string name="taicosonao"> at the facility </string>
+    <string name="danggiuxetaiqt">You are parking at the Quang Trung facility</string>
+    <string name="danggiuxetainvl">You are parking at the Nguyen Van Linh facility</string>
+    <string name="danggiuxetaihk">You are parking at the Hoa Khanh facility</string>
+    <string name="khonggiuxe">You are not parked at University</string>
+
+    // homebv
+    <string name="nhapmasv">Enter the student code</string>
+    <string name="nhaptien">Enter the amount</string>
+    <string name="chonmucnap">Choose your deposit level</string>
+    <string name="xoa">Clean</string>
+    <string name="naptien">Recharge</string>
+    <string name="vuilongnnhaptien">Please select/enter money for the box above</string>
+    <string name="vuilongnhapma">Please scan QR code/enter student code for the box above</string>
+    <string name="naptienthanhcong">Deposit is successful</string>
+
+    // history
+    <string name="bandaguixe">You have parked at the facility</string>
+    <string name="bandaduocnaptien">You have received money from Guard code </string>
+    <string name="bandaguitiencho">You transferred money for Student code </string>
+    <string name="thang">Month</string>
+    <string name="tuan">Week</string>
 
     <string-array name="date">
-        <item>Tháng</item>
-        <item>Tuần</item>
+        <item>Month</item>
+        <item>Week</item>
     </string-array>
 
 </resources>

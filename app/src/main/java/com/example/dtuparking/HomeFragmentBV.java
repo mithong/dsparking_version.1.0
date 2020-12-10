@@ -98,6 +98,7 @@ public class HomeFragmentBV extends Fragment {
         return view;
     }
 
+    // ánh xạ các đối tượng
     private void anhxa() {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         txttien = view.findViewById(R.id.txttiennap);
@@ -110,6 +111,7 @@ public class HomeFragmentBV extends Fragment {
         btnxoa = view.findViewById(R.id.btnclear);
     }
 
+    // thực hiện việc quyét
     private void scancode() {
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
         integrator.setCaptureActivity(captureActivity.class);
@@ -119,18 +121,16 @@ public class HomeFragmentBV extends Fragment {
         integrator.initiateScan();
 
     }
+    // hàm xử lí lúc quét mã qr và đọc dữ liệu
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
         if(result != null){
-            if(result.getContents() != null){
-                try {
-                    JSONObject jsonObject = new JSONObject(result.getContents());
-                    txtmasv.setText(jsonObject.getString("idStudent"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            String s = result.getContents();
+            if(s != null){
+                String[] arrS = s.split("\\|");
+                txtmasv.setText(arrS[1]);
             }
             else {
                 Toast.makeText(getActivity(), "No result", Toast.LENGTH_SHORT).show();
@@ -140,6 +140,7 @@ public class HomeFragmentBV extends Fragment {
             super.onActivityResult(requestCode, resultCode, data);
     }
 
+    // hàm tạo chuỗi ngẫu nhiên
     public String randomAlphaNumeric(int numberOfCharactor) {
         String alpha = "abcdefghijklmnopqrstuvwxyz";
         String alphaUpperCase = alpha.toUpperCase();
@@ -155,27 +156,31 @@ public class HomeFragmentBV extends Fragment {
         return sb.toString();
     }
 
+    // hàm nạp tiền cho sinh viên
     public void naptienchosv(){
         final int[] i = {0};
         mDatabase.child("User/information/parkingMan/").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                // kiểm tra có trống các o editext hay không
                 try{
                     if(txttien.getText().toString().equals("")){
-                        Toast.makeText(getActivity(), "Vui Lòng Chọn/Nhập Tiền Vào Ô Trên", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.vuilongnnhaptien), Toast.LENGTH_SHORT).show();
                     }
                     else if (txtmasv.getText().toString().equals("")){
-                        Toast.makeText(getActivity(), "Vui Lòng Quét QR/Nhập Mã Sinh Viên Vào Ô Trên", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.vuilongnhapma), Toast.LENGTH_SHORT).show();
                     }
                     else {
                         String masv = txtmasv.getText().toString();
                         if(snapshot.child("idStudent").getValue().toString().equals(masv)){
                             final String ma = snapshot.getKey().toString();
 
+                            // lấy thông tin của bảo vệ từ firebase
                             mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     final String mabv = snapshot.child("idGuard").getValue().toString();
+                                    // tăng tiền cho sinh viên
                                     mDatabase.child("User/information/parkingMan/").child(ma).child("money").addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -194,14 +199,15 @@ public class HomeFragmentBV extends Fragment {
 
                                                 String secretNum = String.valueOf(randomAlphaNumeric(10));
 
-                                                NapTienBaoVe napTienBaoVe = new NapTienBaoVe(tg.toString(),txtmasv.getText().toString(),tien.toString(),secretNum,"0",mabv);
+                                                // tạo lịch sử giao dịch đưa lên firebase
+                                                NapTienBaoVe napTienBaoVe = new NapTienBaoVe(tg.toString(),txtmasv.getText().toString(),tien.toString(),false,secretNum,"0",mabv);
 
                                                 mDatabase.child("History").child("guard").child(id).push().setValue(napTienBaoVe);
                                                 mDatabase.child("History/parkingMan/moneyIn").child(ma).push().setValue(napTienBaoVe);
                                                 i[0] = 1;
                                                 txtmasv.setText(null);
                                                 txttien.setText(null);
-                                                Toast.makeText(getActivity(), "Nạp Tiền Thành Công", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity(), getResources().getString(R.string.naptienthanhcong), Toast.LENGTH_SHORT).show();
                                                 return;
 
                                             }

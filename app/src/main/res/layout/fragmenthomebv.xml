@@ -1,188 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:weightSum="10"
-    android:background="#E4E0E0"
+
+    android:background="#ffffff"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="4"
-        android:background="#FBFAFA"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-
         <LinearLayout
+
+            android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="10">
-            <EditText
-                android:id="@+id/txtnhapmasv"
-                android:layout_width="0dp"
-                android:layout_marginLeft="20dp"
-                android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:hint="Nhập mã sinh viên cần nạp "
-                android:textSize="20sp"
-                android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="20sp"
-                android:autoSizeMaxTextSize="30sp"
-                android:autoSizeStepGranularity="25sp" />
-
-            <ImageView
-                android:id="@+id/btnQr"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/botron"
-                android:src="@drawable/ic_baseline_fullscreen_24" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/txttiennap"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_height="match_parent"
-                android:hint="Nhập tiền cần nạp "
-                android:inputType="number"
-                android:textSize="20sp"
-                android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="20sp"
-                android:autoSizeMaxTextSize="30sp"
-                android:autoSizeStepGranularity="25sp" />
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="3"
-        android:background="#FBFAFA"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="Chọn Mức Nạp Tiền"
-            android:textSize="20sp"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="20sp"
-            android:autoSizeMaxTextSize="30sp"
-            android:autoSizeStepGranularity="25sp"
-            android:gravity="center|left"
+            android:layout_height="200dp"
+            android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:textColor="#F44336"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:layout_weight="1">
-
-            <Button
-                android:id="@+id/btn10"
-                android:layout_marginRight="10dp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:background="#FFFFFF"
-                android:elevation="10dp"
-                android:text="10.000 VND"
-                android:textSize="15sp"
-                android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="15sp"
-                android:autoSizeMaxTextSize="30sp"
-                android:autoSizeStepGranularity="25sp"/>
-            <Button
-                android:id="@+id/btn20"
-                android:layout_marginRight="10dp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:background="#FFFFFF"
-                android:elevation="10dp"
-                android:padding="5dp"
-                android:text="20.000 VND"
-                android:textSize="15sp"
-                android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="15sp"
-                android:autoSizeMaxTextSize="30sp"
-                android:autoSizeStepGranularity="25sp" />
-            <Button
-                android:id="@+id/btn50"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:background="#FFFFFF"
-                android:elevation="10dp"
-                android:padding="5dp"
-                android:text="50.000 VND"
-                android:textSize="15sp"
-                android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="15sp"
-                android:autoSizeMaxTextSize="30sp"
-                android:autoSizeStepGranularity="25sp" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="1"
-
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnclear"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/botron_bot"
-            android:text="Xóa"
-            android:textSize="20sp"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="20sp"
-            android:autoSizeMaxTextSize="30sp"
-            android:autoSizeStepGranularity="25sp"/>
-        <Button
-            android:id="@+id/btnnaptien"
-            android:layout_width="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@drawable/botron_bot"
-            android:text="Nạp Tiền"
-            android:textSize="20sp"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="20sp"
-            android:autoSizeMaxTextSize="30sp"
-            android:autoSizeStepGranularity="25sp"/>
+            android:layout_weight="3"
+            android:background="#F4F3F3"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <EditText
+                    android:id="@+id/txtnhapmasv"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="8"
+                    android:autoSizeMaxTextSize="30sp"
+                    android:autoSizeMinTextSize="20sp"
+                    android:autoSizeStepGranularity="25sp"
+                    android:autoSizeTextType="uniform"
+                    android:hint="@string/nhapmasv"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/btnQr"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@drawable/botron"
+                    android:src="@drawable/ic_baseline_fullscreen_24" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/txttiennap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:autoSizeMaxTextSize="30sp"
+                    android:autoSizeMinTextSize="20sp"
+                    android:autoSizeStepGranularity="25sp"
+                    android:autoSizeTextType="uniform"
+                    android:hint="@string/nhaptien"
+                    android:inputType="number"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="3"
+            android:background="#F4F3F3"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="30sp"
+                android:autoSizeMinTextSize="20sp"
+                android:autoSizeStepGranularity="25sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center|left"
+                android:text="@string/chonmucnap"
+                android:textColor="#68019F"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/btn10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:autoSizeMaxTextSize="30sp"
+                    android:autoSizeMinTextSize="15sp"
+                    android:autoSizeStepGranularity="25sp"
+                    android:autoSizeTextType="uniform"
+                    android:background="#FFFFFF"
+                    android:elevation="10dp"
+                    android:text="10.000 VND"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btn20"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:autoSizeMaxTextSize="30sp"
+                    android:autoSizeMinTextSize="15sp"
+                    android:autoSizeStepGranularity="25sp"
+                    android:autoSizeTextType="uniform"
+                    android:background="#FFFFFF"
+                    android:elevation="10dp"
+                    android:text="20.000 VND"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/btn50"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:autoSizeMaxTextSize="30sp"
+                    android:autoSizeMinTextSize="15sp"
+                    android:autoSizeStepGranularity="25sp"
+                    android:autoSizeTextType="uniform"
+                    android:background="#FFFFFF"
+                    android:elevation="10dp"
+                    android:text="50.000 VND"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout6"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+
+            <Button
+                android:id="@+id/btnclear"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="30sp"
+                android:autoSizeMinTextSize="20sp"
+                android:autoSizeStepGranularity="25sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/button"
+                android:text="@string/xoa"
+                android:textColor="#68019F"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btnnaptien"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:autoSizeMaxTextSize="30sp"
+                android:autoSizeMinTextSize="20sp"
+                android:autoSizeStepGranularity="25sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/button2"
+                android:text="@string/naptien"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+        </LinearLayout>
     </LinearLayout>
 
 
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

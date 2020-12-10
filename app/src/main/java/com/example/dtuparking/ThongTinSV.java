@@ -63,58 +63,66 @@ public class ThongTinSV extends AppCompatActivity {
 
         anhxa();
 
+        // nhận dữ liệu từ home
         Intent intent = getIntent();
         id = intent.getStringExtra("idSinhVien");
 
+        // truy vấn đến thông tin trong firebase
         mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 try{
+                    // kiểm tra có phải sinh viên
                     if(snapshot.child("position").getValue().toString().equals("3")){
                         txttenngdung.setText(snapshot.child("name").getValue().toString());
                         txtngaysinh.setText(snapshot.child("birthday").getValue().toString());
+                        // kiểm tra nam or nữ
                         if(snapshot.child("sex").getValue().toString().equals("1")){
-                            txtgioitinh.setText("Nam");
+                            txtgioitinh.setText(getResources().getString(R.string.nam));
                         }
                         else
-                            txtgioitinh.setText("Nữ");
+                            txtgioitinh.setText(getResources().getString(R.string.nu));
 
                         txtdiachi.setText(snapshot.child("adress").getValue().toString());
                         txtmasv.setText(snapshot.child("idStudent").getValue().toString());
                         txtlop.setText(snapshot.child("classS").getValue().toString());
+                        // gọi hàm log ảnh
                         new ThongTinSV.LoadImage().execute(snapshot.child("avatar").getValue().toString());
                     }
+                    // kiểm tra có phải giảng viên
                     else if(snapshot.child("position").getValue().toString().equals("2")){
                         txttenngdung.setText(snapshot.child("name").getValue().toString());
                         txtngaysinh.setText(snapshot.child("birthday").getValue().toString());
                         if(snapshot.child("sex").getValue().toString().equals("1")){
-                            txtgioitinh.setText("Nam");
+                            txtgioitinh.setText(getResources().getString(R.string.nam));
                         }
                         else
-                            txtgioitinh.setText("Nữ");
+                            txtgioitinh.setText(getResources().getString(R.string.nu));
 
                         txtdiachi.setText(snapshot.child("adress").getValue().toString());
-                        txtchangema.setText("Mã Giảng Viên :");
+                        txtchangema.setText(getResources().getString(R.string.magiangvien));
                         txtmasv.setText(snapshot.child("idLecturers").getValue().toString());
                         txtlop.setVisibility(View.INVISIBLE);
                         txtchangelop.setVisibility(View.INVISIBLE);
                         new ThongTinSV.LoadImage().execute(snapshot.child("avatar").getValue().toString());
                     }
                 }catch (Exception e){
+                    // kiểm tra có phải bảo vệ
                     mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             txttenngdung.setText(snapshot.child("name").getValue().toString());
                             txtngaysinh.setText(snapshot.child("birthday").getValue().toString());
                             if(snapshot.child("sex").getValue().toString().equals("1")){
-                                txtgioitinh.setText("Nam");
+                                txtgioitinh.setText(getResources().getString(R.string.nam));
                             }
                             else
-                                txtgioitinh.setText("Nữ");
+                                txtgioitinh.setText(getResources().getString(R.string.nu));
 
                             txtdiachi.setText(snapshot.child("adress").getValue().toString());
-                            txtchangema.setText("Mã Bảo Vệ :");
+                            txtchangema.setText(getResources().getString(R.string.mabaove));
                             txtmasv.setText(snapshot.child("idGuard").getValue().toString());
+                            // ẩn các dòng không phù hợp
                             txtlop.setVisibility(View.INVISIBLE);
                             txtchangelop.setVisibility(View.INVISIBLE);
                             new ThongTinSV.LoadImage().execute(snapshot.child("avatar").getValue().toString());
@@ -135,6 +143,7 @@ public class ThongTinSV extends AppCompatActivity {
             }
         });
 
+        // xử lí việc truy cập vào thư viện điện thoại
         btndoi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,6 +156,7 @@ public class ThongTinSV extends AppCompatActivity {
             }
         });
 
+        // quay lại trang trước
         imgback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,6 +191,7 @@ public class ThongTinSV extends AppCompatActivity {
             imgttavatar.setImageBitmap(bitmap);
         }
     }
+    // viết hàm xử lí khi chọn hình
     private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         if(intent.resolveActivity(getPackageManager()) != null){
@@ -188,6 +199,7 @@ public class ThongTinSV extends AppCompatActivity {
         }
     }
 
+    // kiểm tra ảnh được chọn
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -199,6 +211,7 @@ public class ThongTinSV extends AppCompatActivity {
         }
     }
 
+    // thay đổi ảnh được chọn và gửi lên firebase
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -261,7 +274,7 @@ public class ThongTinSV extends AppCompatActivity {
 
     }
 
-
+    // ánh xạ các đối tượng
     private void anhxa() {
         storage = FirebaseStorage.getInstance();
         forder = FirebaseStorage.getInstance().getReference();

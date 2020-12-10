@@ -4,6 +4,7 @@ public class NapTienBaoVe {
     String DateSend;
     String IdStudent;
     String PayMoney;
+    Boolean IsNoti;
     String IdPay;
     String Method;
     String IdSender;
@@ -12,13 +13,22 @@ public class NapTienBaoVe {
     public NapTienBaoVe() {
     }
 
-    public NapTienBaoVe(String dateSend, String idStudent, String payMoney, String idPay, String method, String idSender) {
+    public NapTienBaoVe(String dateSend, String idStudent, String payMoney,Boolean isNoti, String idPay, String method, String idSender) {
         DateSend = dateSend;
         IdStudent = idStudent;
         PayMoney = payMoney;
+        IsNoti = isNoti;
         IdPay = idPay;
         Method = method;
         IdSender = idSender;
+    }
+
+    public Boolean getIsNoti() {
+        return IsNoti;
+    }
+
+    public void setIsNoti(Boolean isNoti) {
+        IsNoti = isNoti;
     }
 
     public String getDateSend() {

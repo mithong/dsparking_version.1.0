@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,12 +57,13 @@ public class HistoryFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),RecyclerView.VERTICAL,false);
         rcv_catagory.setLayoutManager(linearLayoutManager);
 
+        // đưa dữ liệu vào list
         final List<Category> listcata = new ArrayList<>();
-
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),R.array.date, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(adapter);
 
+        // combobox chọn lọc theo tuần hoặc tháng
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, final long idsv) {
@@ -83,6 +85,7 @@ public class HistoryFragment extends Fragment {
         return view;
     }
 
+    // sắp xếp các dữ liệu theo giày và giờ
     private void sortArray (List<LSGIAODICH> listgd){
 
         Collections.sort(listgd, new Comparator<LSGIAODICH>() {
@@ -102,6 +105,7 @@ public class HistoryFragment extends Fragment {
 
     }
 
+    // lọc theo tháng
     private void lstheoThang(){
         // khai báo hàm ngày
         final Calendar cal = Calendar.getInstance();
@@ -118,6 +122,7 @@ public class HistoryFragment extends Fragment {
 
         // tạo biến i cố định để không tự động tăng dữ lieeuju firebase
         final int[] i = {0};
+        final DecimalFormat formatter = new DecimalFormat("###,###,###");
 
         // truy vấn tới thông tin để xem là sinh viên hay giáo viên
         mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
@@ -149,7 +154,7 @@ public class HistoryFragment extends Fragment {
                                 }
 
                                 // chuyển string thành date
-                                SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 SimpleDateFormat sdf = new SimpleDateFormat("MM");
                                 SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM");
                                 Date date1 = null;
@@ -170,16 +175,16 @@ public class HistoryFragment extends Fragment {
                                 }
 
                                 if(sdf.format(date1).compareTo(sdf.format(date2))==0){
-                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"-"+tien/1000+".000 đ",magd,id,"#F44336"));
+                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date3))==0){
-                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"-"+tien/1000+".000 đ",magd,id,"#F44336"));
+                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date4))==0){
-                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"-"+tien/1000+".000 đ",magd,id,"#F44336"));
+                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date5))==0){
-                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"-"+tien/1000+".000 đ",magd,id,"#F44336"));
+                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#F44336"));
                                 }
 
                                 sortArray(listGD1);
@@ -244,29 +249,34 @@ public class HistoryFragment extends Fragment {
                                 }
 
                                 if(sdf.format(date1).compareTo(sdf.format(date2))==0){
-                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã nhận được tiền từ bảo vệ mã "+IdSender,datengay,"+"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaduocnaptien)+" "+IdSender,datengay,"+ "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date3))==0){
-                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã nhận được tiền từ bảo vệ mã "+IdSender,datengay,"+"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaduocnaptien)+" "+IdSender,datengay,"+ "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date4))==0){
-                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã nhận được tiền từ bảo vệ mã "+IdSender,datengay,"+"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaduocnaptien)+" "+IdSender,datengay,"+ "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date5))==0){
-                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã nhận được tiền từ bảo vệ mã "+IdSender,datengay,"+"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaduocnaptien)+" "+IdSender,datengay,"+ "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                                 }
 
 
                                 if(i[0] ==0){
-                                    listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)+1),listGD1));
-                                    listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)),listGD2));
-                                    listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)-1),listGD3));
-                                    listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)-2),listGD4));
+                                    listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)+1),listGD1));
+                                    listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)),listGD2));
+                                    listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)-1),listGD3));
+                                    listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)-2),listGD4));
 
                                     cataAdapter.setData(listcata);
                                     rcv_catagory.setAdapter(cataAdapter);
                                     i[0]++;
                                 }
+
+                                sortArray(listGD1);
+                                sortArray(listGD2);
+                                sortArray(listGD3);
+                                sortArray(listGD4);
 
                             }
 
@@ -312,7 +322,7 @@ public class HistoryFragment extends Fragment {
                                 }
 
                                 // chuyển string thành date
-                                SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 SimpleDateFormat sdf = new SimpleDateFormat("MM");
                                 SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM");
                                 Date date1 = null;
@@ -333,16 +343,16 @@ public class HistoryFragment extends Fragment {
                                 }
 
                                 if(sdf.format(date1).compareTo(sdf.format(date2))==0){
-                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"null",magd,id,"#F44336"));
+                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"null",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date3))==0){
-                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"null",magd,id,"#F44336"));
+                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"null",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date4))==0){
-                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"null",magd,id,"#F44336"));
+                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"null",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date5))==0){
-                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"null",magd,id,"#87F30B"));
+                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"null",magd,id,"#87F30B"));
                                 }
 
                                 sortArray(listGD1);
@@ -351,10 +361,10 @@ public class HistoryFragment extends Fragment {
                                 sortArray(listGD4);
 
                                 if(i[0] ==0){
-                                    listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)+1),listGD1));
-                                    listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)),listGD2));
-                                    listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)-1),listGD3));
-                                    listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)-2),listGD4));
+                                    listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)+1),listGD1));
+                                    listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)),listGD2));
+                                    listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)-1),listGD3));
+                                    listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)-2),listGD4));
 
                                     cataAdapter.setData(listcata);
                                     rcv_catagory.setAdapter(cataAdapter);
@@ -396,7 +406,7 @@ public class HistoryFragment extends Fragment {
                             Integer tien = Integer.parseInt(price);
 
                             // chuyển string thành date
-                            SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                            SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             SimpleDateFormat sdf = new SimpleDateFormat("MM");
                             Date date1 = null;
                             Date date2 = null;
@@ -416,16 +426,16 @@ public class HistoryFragment extends Fragment {
                             }
 
                             if(sdf.format(date1).compareTo(sdf.format(date2))==0){
-                                listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã chuyển tiền cho "+idStudent,datengay,"-"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaguitiencho)+" "+idStudent,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                             }
                             else if(sdf.format(date1).compareTo(sdf.format(date3))==0){
-                                listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã chuyển tiền cho "+idStudent,datengay,"-"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaguitiencho)+" "+idStudent,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                             }
                             else if(sdf.format(date1).compareTo(sdf.format(date4))==0){
-                                listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã chuyển tiền cho "+idStudent,datengay,"-"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaguitiencho)+" "+idStudent,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                             }
                             else if(sdf.format(date1).compareTo(sdf.format(date5))==0){
-                                listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã chuyển tiền cho "+idStudent,datengay,"-"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaguitiencho)+" "+idStudent,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                             }
 
                             sortArray(listGD1);
@@ -434,10 +444,10 @@ public class HistoryFragment extends Fragment {
                             sortArray(listGD4);
 
                             if(i[0] ==0){
-                                listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)+1),listGD1));
-                                listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)),listGD2));
-                                listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)-1),listGD3));
-                                listcata.add(new Category("Tháng "+(cal.get(Calendar.MONTH)-2),listGD4));
+                                listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)+1),listGD1));
+                                listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)),listGD2));
+                                listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)-1),listGD3));
+                                listcata.add(new Category(getResources().getString(R.string.thang)+" "+(cal.get(Calendar.MONTH)-2),listGD4));
 
                                 cataAdapter.setData(listcata);
                                 rcv_catagory.setAdapter(cataAdapter);
@@ -476,6 +486,7 @@ public class HistoryFragment extends Fragment {
         });
     }
 
+    // lọc theo tuần
     private void lstheoTuan(){
         // khai báo hàm ngày
         final Calendar cal = Calendar.getInstance();
@@ -492,6 +503,7 @@ public class HistoryFragment extends Fragment {
 
         // tạo biến i cố định để không tự động tăng dữ lieeuju firebase
         final int[] i = {0};
+        final DecimalFormat formatter = new DecimalFormat("###,###,###");
 
         // truy vấn tới thông tin để xem là sinh viên hay giáo viên
         mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
@@ -544,16 +556,16 @@ public class HistoryFragment extends Fragment {
                                 }
 
                                 if(sdf.format(date1).compareTo(sdf.format(date2))==0){
-                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"-"+tien/1000+".000 đ",magd,id,"#F44336"));
+                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date3))==0){
-                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"-"+tien/1000+".000 đ",magd,id,"#F44336"));
+                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date4))==0){
-                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"-"+tien/1000+".000 đ",magd,id,"#F44336"));
+                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date5))==0){
-                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"-"+tien/1000+".000 đ",magd,id,"#F44336"));
+                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#F44336"));
                                 }
 
                                 sortArray(listGD1);
@@ -618,29 +630,34 @@ public class HistoryFragment extends Fragment {
                                 }
 
                                 if(sdf.format(date1).compareTo(sdf.format(date2))==0){
-                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã nhận được tiền từ "+IdSender,datengay,"+"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaduocnaptien)+" "+IdSender,datengay,"+ "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date3))==0){
-                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã nhận được tiền từ "+IdSender,datengay,"+"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaduocnaptien)+" "+IdSender,datengay,"+ "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date4))==0){
-                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã nhận được tiền từ "+IdSender,datengay,"+"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaduocnaptien)+" "+IdSender,datengay,"+ "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date5))==0){
-                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã nhận được tiền từ "+IdSender,datengay,"+"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaduocnaptien)+" "+IdSender,datengay,"+ "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                                 }
 
 
                                 if(i[0] ==0){
-                                    listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)),listGD1));
-                                    listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)-1),listGD2));
-                                    listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)-2),listGD3));
-                                    listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)-3),listGD4));
+                                    listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)),listGD1));
+                                    listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)-1),listGD2));
+                                    listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)-2),listGD3));
+                                    listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)-3),listGD4));
 
                                     cataAdapter.setData(listcata);
                                     rcv_catagory.setAdapter(cataAdapter);
                                     i[0]++;
                                 }
+
+                                sortArray(listGD1);
+                                sortArray(listGD2);
+                                sortArray(listGD3);
+                                sortArray(listGD4);
 
                             }
 
@@ -709,16 +726,16 @@ public class HistoryFragment extends Fragment {
                                 }
 
                                 if(sdf.format(date1).compareTo(sdf.format(date2))==0){
-                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"null",magd,id,"#F44336"));
+                                    listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"null",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date3))==0){
-                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"null",magd,id,"#F44336"));
+                                    listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"null",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date4))==0){
-                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"null",magd,id,"#F44336"));
+                                    listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"null",magd,id,"#F44336"));
                                 }
                                 else if(sdf.format(date1).compareTo(sdf.format(date5))==0){
-                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,"Bạn đã giữ xe tại cơ sở "+ coso,datengay,"null",magd,id,"#87F30B"));
+                                    listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_24,getResources().getString(R.string.bandaguixe)+" "+ coso,datengay,"null",magd,id,"#87F30B"));
                                 }
 
                                 sortArray(listGD1);
@@ -727,10 +744,10 @@ public class HistoryFragment extends Fragment {
                                 sortArray(listGD4);
 
                                 if(i[0] ==0){
-                                    listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)),listGD1));
-                                    listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)-1),listGD2));
-                                    listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)-2),listGD3));
-                                    listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)-3),listGD4));
+                                    listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)),listGD1));
+                                    listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)-1),listGD2));
+                                    listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)-2),listGD3));
+                                    listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)-3),listGD4));
 
                                     cataAdapter.setData(listcata);
                                     rcv_catagory.setAdapter(cataAdapter);
@@ -793,16 +810,16 @@ public class HistoryFragment extends Fragment {
                             }
 
                             if(sdf.format(date1).compareTo(sdf.format(date2))==0){
-                                listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã chuyển tiền cho "+idStudent,datengay,"-"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                listGD1.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaguitiencho)+" "+idStudent,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                             }
                             else if(sdf.format(date1).compareTo(sdf.format(date3))==0){
-                                listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã chuyển tiền cho "+idStudent,datengay,"-"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                listGD2.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaguitiencho)+" "+idStudent,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                             }
                             else if(sdf.format(date1).compareTo(sdf.format(date4))==0){
-                                listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã chuyển tiền cho "+idStudent,datengay,"-"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                listGD3.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaguitiencho)+" "+idStudent,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                             }
                             else if(sdf.format(date1).compareTo(sdf.format(date5))==0){
-                                listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,"Bạn đã chuyển tiền cho "+idStudent,datengay,"-"+tien/1000+".000 đ",magd,id,"#4CAF50"));
+                                listGD4.add(new LSGIAODICH(R.drawable.ic_baseline_account_balance_wallet_242,getResources().getString(R.string.bandaguitiencho)+" "+idStudent,datengay,"- "+formatter.format(tien)+" VNĐ",magd,id,"#4CAF50"));
                             }
 
                             sortArray(listGD1);
@@ -811,10 +828,10 @@ public class HistoryFragment extends Fragment {
                             sortArray(listGD4);
 
                             if(i[0] ==0){
-                                listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)),listGD1));
-                                listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)-1),listGD2));
-                                listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)-2),listGD3));
-                                listcata.add(new Category("Tuần "+(cal.get(Calendar.WEEK_OF_YEAR)-3),listGD4));
+                                listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)),listGD1));
+                                listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)-1),listGD2));
+                                listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)-2),listGD3));
+                                listcata.add(new Category(getResources().getString(R.string.tuan)+" "+(cal.get(Calendar.WEEK_OF_YEAR)-3),listGD4));
 
                                 cataAdapter.setData(listcata);
                                 rcv_catagory.setAdapter(cataAdapter);
