@@ -1,9 +1,12 @@
 package com.example.dtuparking;
 
+import android.content.res.Resources;
+
 import java.util.Date;
 
 public class LSGIAODICH {
     private int resourceID;
+    private String resourID;
     private String thongbao;
     private Date ngay;
     private String tien;
@@ -12,14 +15,23 @@ public class LSGIAODICH {
     private String mau;
 
 
-    public LSGIAODICH(int resourceID, String thongbao, Date ngay, String tien, String magd, String id, String mau) {
+    public LSGIAODICH(int resourceID,String resourID, String thongbao, Date ngay, String tien, String magd, String id, String mau) {
         this.resourceID = resourceID;
+        this.resourID = resourID;
         this.thongbao = thongbao;
         this.ngay = ngay;
         this.tien = tien;
         this.magd = magd;
         this.id = id;
         this.mau = mau;
+    }
+
+    public String getResourID() {
+        return resourID;
+    }
+
+    public void setResourID(String resourID) {
+        this.resourID = resourID;
     }
 
     public String getMau() {

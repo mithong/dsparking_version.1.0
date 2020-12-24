@@ -10,18 +10,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#570087"
+        android:background="#360080"
         android:orientation="horizontal"
         android:weightSum="10"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/backph"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="25dp"
-            android:layout_weight="1.5"
-            android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+            android:layout_weight="1.5">
+            <ImageView
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:layout_weight="1.5"
+                android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+        </LinearLayout>
 
         <Button
             android:layout_width="0dp"
@@ -46,7 +52,7 @@
         android:layout_width="300dp"
         android:layout_height="5dp"
         android:layout_marginTop="5dp"
-        android:background="#9C27B0"
+        android:background="#5C2C9E"
         android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -99,7 +105,7 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="1dp"
         android:background="@drawable/gradient"
-        android:backgroundTint="#A900C6"
+        android:backgroundTint="#5C2C9E"
         android:transitionName="bottom"
         app:backgroundTint="#F8E7FA"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -47,8 +47,8 @@ public class LS_Adapter extends RecyclerView.Adapter<LS_Adapter.lsViewHolder>{
             return;
         }
         holder.imgHinh.setImageResource(lsgiaodich.getResourceID());
-        holder.txttb.setText(lsgiaodich.getThongbao());
-        SimpleDateFormat sdf2 = new SimpleDateFormat("E, dd/MM");
+        holder.txttb.setText(lsgiaodich.getResourID()+" "+lsgiaodich.getThongbao());
+        SimpleDateFormat sdf2 = new SimpleDateFormat("E, HH:mm dd/MM");
         holder.txtngay.setText(sdf2.format(lsgiaodich.getNgay()));
         holder.txttien.setText(lsgiaodich.getTien());
         holder.txttien.setTextColor(Color.parseColor(lsgiaodich.getMau()));
@@ -62,6 +62,7 @@ public class LS_Adapter extends RecyclerView.Adapter<LS_Adapter.lsViewHolder>{
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

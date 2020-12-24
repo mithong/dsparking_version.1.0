@@ -13,6 +13,7 @@
     <string name="saimatkhau">Wrong Password </string>
     <string name="dangnhapthanhcong">Log in successfully </string>
     <string name="ktramang">Please check the network connection </string>
+    <string name="kothedangnhap">This account cannot be logged in !!! </string>
 
     // home
     <string name="trangchu">HOME</string>
@@ -24,11 +25,12 @@
     <string name="bandaduocnap">You have been transfers </string>
     <string name="tubaoveluc"> from guard at </string>
     <string name="Bancomuondangxuat">Do you want to log out of this account ?</string>
+    <string name="Banganhettien">Your account is running out of money. Please top up your account !!!</string>
 
     // ChiTietLSGD
     <string name="chiTietGiaoDich">TranSaction details</string>
     <string name="napTienVaoVi">Deposit your wallet</string>
-    <string name="thanhCong">success</string>
+    <string name="thanhCong">SUCCESS</string>
     <string name="magd">Transaction code :</string>
     <string name="ngaygd">Transaction date :</string>
     <string name="tgiangd">Transaction time :</string>
@@ -89,7 +91,7 @@
     <string name="danggiuxetaiqt">You are parking at the Quang Trung facility</string>
     <string name="danggiuxetainvl">You are parking at the Nguyen Van Linh facility</string>
     <string name="danggiuxetaihk">You are parking at the Hoa Khanh facility</string>
-    <string name="khonggiuxe">You are not parked at University</string>
+    <string name="khonggiuxe">"You are not parked "</string>
 
     // homebv
     <string name="nhapmasv">Enter the student code</string>
@@ -100,11 +102,12 @@
     <string name="vuilongnnhaptien">Please select/enter money for the box above</string>
     <string name="vuilongnhapma">Please scan QR code/enter student code for the box above</string>
     <string name="naptienthanhcong">Deposit is successful</string>
+    <string name="saimasv">Wrong Student code</string>
 
     // history
     <string name="bandaguixe">You have parked at the facility</string>
-    <string name="bandaduocnaptien">You have received money from Guard code </string>
-    <string name="bandaguitiencho">You transferred money for Student code </string>
+    <string name="bandaduocnaptien">You have received money from Guard </string>
+    <string name="bandaguitiencho">You transferred money for Student</string>
     <string name="thang">Month</string>
     <string name="tuan">Week</string>
 

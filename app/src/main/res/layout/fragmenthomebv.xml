@@ -110,7 +110,7 @@
                 android:autoSizeTextType="uniform"
                 android:gravity="center|left"
                 android:text="@string/chonmucnap"
-                android:textColor="#68019F"
+                android:textColor="#5C2C9E"
                 android:textSize="20sp" />
 
             <LinearLayout
@@ -196,7 +196,7 @@
                 android:autoSizeTextType="uniform"
                 android:background="@drawable/button"
                 android:text="@string/xoa"
-                android:textColor="#68019F"
+                android:textColor="#5C2C9E"
                 android:textSize="20sp" />
 
             <Button

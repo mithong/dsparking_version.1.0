@@ -19,6 +19,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -54,10 +55,12 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 
 public class home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,9 +73,11 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
     NavigationView navigationView;
     FloatingActionButton fab;
     DatabaseReference mDatabase;
-
+    SeesionManager seesionManager;
+    SharedPreferences sharedPreferences;
     int id1 = 0;
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
@@ -85,46 +90,280 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         final String id = intent.getStringExtra("idSinhVien");
 
 
+        // kiểm tra internet
+        if(CheckInternet.isConnect(getBaseContext())){
+            //đọc tên sinh viên mã sinh viên từ firebase
+            mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try {
+                        if(snapshot.child("position").getValue().toString().equals("3")){
+                            txtten.setText(snapshot.child("name").getValue().toString());
+                            txtmasv.setText(snapshot.child("idStudent").getValue().toString());
+                            new LoadImage().execute(snapshot.child("avatar").getValue().toString());
 
-          //đọc tên sinh viên mã sinh viên từ firebase
-        mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try {
-                    if(snapshot.child("position").getValue().toString().equals("3")){
-                        txtten.setText(snapshot.child("name").getValue().toString());
-                        txtmasv.setText(snapshot.child("idStudent").getValue().toString());
-                        new LoadImage().execute(snapshot.child("avatar").getValue().toString());
+                            // lưu lại dữ liệu
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("name",snapshot.child("name").getValue().toString());
+                            editor.putString("idStudent",snapshot.child("idStudent").getValue().toString());
+                            editor.commit();
+                        }
+                        else if(snapshot.child("position").getValue().toString().equals("2")){
+                            txtten.setText(snapshot.child("name").getValue().toString());
+                            txtmasv.setText(snapshot.child("idLecturers").getValue().toString());
+                            new LoadImage().execute(snapshot.child("avatar").getValue().toString());
+
+                            // lưu lại dữ liệu
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("name",snapshot.child("name").getValue().toString());
+                            editor.putString("idStudent",snapshot.child("idLecturers").getValue().toString());
+                            editor.commit();
+                        }
+                    }catch (Exception e){
+                        
+                        mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
+                            @SuppressLint("RestrictedApi")
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                txtten.setText(snapshot.child("name").getValue().toString());
+                                txtmasv.setText(snapshot.child("idGuard").getValue().toString());
+                                new LoadImage().execute(snapshot.child("avatar").getValue().toString());
+                                fab.setVisibility(View.GONE);
+
+                                // lưu lại dữ liệu
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("name",snapshot.child("name").getValue().toString());
+                                editor.putString("idStudent",snapshot.child("idGuard").getValue().toString());
+                                editor.commit();
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
-                    else if(snapshot.child("position").getValue().toString().equals("2")){
-                        txtten.setText(snapshot.child("name").getValue().toString());
-                        txtmasv.setText(snapshot.child("idLecturers").getValue().toString());
-                        new LoadImage().execute(snapshot.child("avatar").getValue().toString());
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            // lien ket vs cac fragment
+            mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try {
+
+                        if(snapshot.child("position").getValue().toString().equals("3")){
+                            setUpViewPager();
+
+                            // lưu dữ liệu
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("position",3);
+                            editor.commit();
+                        }
+                        else if(snapshot.child("position").getValue().toString().equals("2")){
+                            setUpViewPager();
+
+                            // lưu dữ liệu
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putInt("position",2);
+                            editor.commit();
+                        }
+                    }catch (Exception e){
+                        setUpViewPagerBV();
+
+                        // lưu dữ liệu
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("position",1);
+                        editor.commit();
                     }
-                }catch (Exception e){
-                    mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
-                        @SuppressLint("RestrictedApi")
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            //  bắt sự kiện thêm lịch sử giao dịch thì sẽ có thông báo
+            mDatabase.child("History/parkingMan/").child("moneyOut").child(id).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    final String key = snapshot.getKey().toString();
+                    String dateGet = snapshot.child("dateGet").getValue().toString();
+                    final SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date datengay = null;
+                    try {
+                        datengay = sdfgoc.parse(dateGet);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    final Boolean isNoti = (Boolean) snapshot.child("isNoti").getValue();
+                    final Date finalDatengay = datengay;
+                    mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            txtten.setText(snapshot.child("name").getValue().toString());
-                            txtmasv.setText(snapshot.child("idGuard").getValue().toString());
-                            new LoadImage().execute(snapshot.child("avatar").getValue().toString());
-                            fab.setVisibility(View.GONE);
+                            try {
+
+                                if(snapshot.child("position").getValue().toString().equals("3")){
+                                    // nếu bằng false thì sẻ có thông báo sau khi thông báo sẽ chuyển thành true
+                                    if(!isNoti){
+                                        noficationGuiXe(sdfgoc.format(finalDatengay));
+                                        mDatabase.child("History/parkingMan/").child("moneyOut").child(id).child(key).child("isNoti").setValue(true);
+                                    }
+                                }
+
+                            }catch (Exception e){
+                            }
+
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
 
                         }
                     });
+
+
                 }
 
-            }
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                }
 
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            //  bắt sự kiện thêm lịch sử giao dịch thì sẽ có thông báo
+            mDatabase.child("History/parkingMan/").child("moneyIn").child(id).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    final String key = snapshot.getKey().toString();
+                    String dateGet = snapshot.child("dateSend").getValue().toString();
+                    String payMoney = snapshot.child("payMoney").getValue().toString();
+                    final SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date datengay = null;
+                    try {
+                        datengay = sdfgoc.parse(dateGet);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    final Integer tien = Integer.parseInt(payMoney);
+                    final Boolean isNoti = (Boolean) snapshot.child("isNoti").getValue();
+                    final Date finalDatengay = datengay;
+                    mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            try {
+
+                                if(snapshot.child("position").getValue().toString().equals("3")){
+                                    // nếu bằng false thì sẻ có thông báo sau khi thông báo sẽ chuyển thành true
+                                    if(!isNoti){
+                                        noficationNaptien(tien/1000+".000 đ",sdfgoc.format(finalDatengay));
+                                        mDatabase.child("History/parkingMan/").child("moneyIn").child(id).child(key).child("isNoti").setValue(true);
+                                    }
+                                }
+
+                            }catch (Exception e){
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            final int[] i = {0};
+            // ktra tien
+            mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange( @NonNull DataSnapshot snapshot ) {
+                    try{
+                        // kiểm tra có phải sinh viên
+                        if(snapshot.child("position").getValue().toString().equals("3")){
+                            String tien = snapshot.child("money").getValue().toString();
+                            Integer tien2 = Integer.parseInt(tien);
+
+                            // định dạng kiểu tiền
+                            if (tien2 <= 3000 && i[0] ==0){
+                                thongbaotien();
+                                i[0] = 1;
+                            }
+
+                        }
+                    }catch (Exception e){
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled( @NonNull DatabaseError error ) {
+
+                }
+            });
+        }
+        else {
+            txtten.setText(sharedPreferences.getString("name",""));
+            txtmasv.setText(sharedPreferences.getString("idStudent",""));
+            Integer position = sharedPreferences.getInt("position",1);
+            if(position == 1){
+                setUpViewPagerBV();
+                fab.setVisibility(View.GONE);
+            }else if(position == 2){
+                setUpViewPager();
+            }else if(position == 3){
+                setUpViewPager();
             }
-        });
+        }
+
 
         // bắt sự kiện khi nhấn vào menu và mở menu
         imgmenu.setOnClickListener(new View.OnClickListener() {
@@ -163,28 +402,6 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
-        mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try {
-
-                    if(snapshot.child("position").getValue().toString().equals("3")){
-                        setUpViewPager();
-                    }
-                    else if(snapshot.child("position").getValue().toString().equals("2")){
-                        setUpViewPager();
-                    }
-                }catch (Exception e){
-                    setUpViewPagerBV();
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
 
 
         // bắt sự kiện chuyển trang
@@ -205,98 +422,10 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         });
         UpdateHeader();
 
-        //  bắt sự kiện thêm lịch sử giao dịch thì sẽ có thông báo
-        mDatabase.child("History/parkingMan/").child("moneyOut").child(id).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String key = snapshot.getKey().toString();
-                String dateGet = snapshot.child("dateGet").getValue().toString();
-                SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date datengay = null;
-                try {
-                    datengay = sdfgoc.parse(dateGet);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Boolean isNoti = (Boolean) snapshot.child("isNoti").getValue();
-                // nếu bằng false thì sẻ có thông báo sau khi thông báo sẽ chuyển thành true
-                if(!isNoti){
-                    noficationGuiXe(sdfgoc.format(datengay));
-                    mDatabase.child("History/parkingMan/").child("moneyOut").child(id).child(key).child("isNoti").setValue(true);
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        //  bắt sự kiện thêm lịch sử giao dịch thì sẽ có thông báo
-        mDatabase.child("History/parkingMan/").child("moneyIn").child(id).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String key = snapshot.getKey().toString();
-                String dateGet = snapshot.child("dateSend").getValue().toString();
-                String payMoney = snapshot.child("payMoney").getValue().toString();
-                SimpleDateFormat sdfgoc = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date datengay = null;
-                try {
-                    datengay = sdfgoc.parse(dateGet);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Integer tien = Integer.parseInt(payMoney);
-                Boolean isNoti = (Boolean) snapshot.child("isNoti").getValue();
-                // nếu bằng false thì sẻ có thông báo sau khi thông báo sẽ chuyển thành true
-                if(!isNoti){
-                    noficationNaptien(tien/1000+".000 đ",sdfgoc.format(datengay));
-                    mDatabase.child("History/parkingMan/").child("moneyIn").child(id).child(key).child("isNoti").setValue(true);
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
     }
 
     // hiển thị thông báo nofication khi có lịch sử gửi xe thêm vào
-    private void noficationGuiXe(String ngay) {
+    public void noficationGuiXe(String ngay) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel channel =
                     new NotificationChannel("n","n", NotificationManager.IMPORTANCE_DEFAULT);
@@ -317,7 +446,7 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     // hiển thị thông báo nofication khi được nạp tiền
-    private void noficationNaptien(String tien,String ngay) {
+    public void noficationNaptien(String tien, String ngay) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel channel =
                     new NotificationChannel("n","n", NotificationManager.IMPORTANCE_DEFAULT);
@@ -350,6 +479,8 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         txtten = (TextView) findViewById(R.id.txtten);
         txtmasv = (TextView) findViewById(R.id.txtmasv);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        seesionManager = new SeesionManager(getApplication());
+        sharedPreferences = getSharedPreferences("datalogin",MODE_PRIVATE);
     }
 
     // viết hàm tạo class để đọc link hình
@@ -520,9 +651,27 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
                 Intent intent = new Intent(home.this,login.class);
                 intent.putExtra("ktra",false);
                 startActivity(intent);
+
+                seesionManager.SetLogin(false);
             }
         });
         alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick( DialogInterface dialogInterface, int i ) {
+
+            }
+        });
+        alertDialog.show();
+    }
+
+    // thông báo khi gần hết tiền
+    private void thongbaotien(){
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(home.this);
+        alertDialog.setTitle(getResources().getString(R.string.thongbao));
+        alertDialog.setIcon(R.mipmap.ic_launcher);
+        alertDialog.setMessage(getResources().getString(R.string.Banganhettien));
+
+        alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick( DialogInterface dialogInterface, int i ) {
 
@@ -542,43 +691,72 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         // nhận dữ liệu từ login
         Intent intent = getIntent();
         final String id = intent.getStringExtra("idSinhVien");
-        // đọc tên sinh viên mã sinh viên từ firebase
-        mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try {
-                    if(snapshot.child("position").getValue().toString().equals("3")){
-                        txttensvmenu.setText(snapshot.child("name").getValue().toString());
-                        txtmasvmenu.setText(snapshot.child("idStudent").getValue().toString());
-                        new LoadImagemenu().execute(snapshot.child("avatar").getValue().toString());
-                    }
-                    else if(snapshot.child("position").getValue().toString().equals("2")){
-                        txttensvmenu.setText(snapshot.child("name").getValue().toString());
-                        txtmasvmenu.setText(snapshot.child("idLecturers").getValue().toString());
-                        new LoadImagemenu().execute(snapshot.child("avatar").getValue().toString());
-                    }
-                }catch (Exception e){
-                    mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            txttensvmenu.setText(snapshot.child("name").getValue().toString());
-                            txtmasvmenu.setText(snapshot.child("idGuard").getValue().toString());
-                            new LoadImagemenu().execute(snapshot.child("avatar").getValue().toString());
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
 
+        if(CheckInternet.isConnect(getBaseContext())){
+            // đọc tên sinh viên mã sinh viên từ firebase
+            mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try {
+                        if(snapshot.child("position").getValue().toString().equals("3")){
+                            txttensvmenu.setText(snapshot.child("name").getValue().toString());
+                            txtmasvmenu.setText(snapshot.child("idStudent").getValue().toString());
+                            new LoadImagemenu().execute(snapshot.child("avatar").getValue().toString());
+
+                            // lưu lại dữ liệu
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("name",snapshot.child("name").getValue().toString());
+                            editor.putString("idStudent",snapshot.child("idStudent").getValue().toString());
+                            editor.putString("avatar",snapshot.child("avatar").getValue().toString());
+                            editor.commit();
                         }
-                    });
+                        else if(snapshot.child("position").getValue().toString().equals("2")){
+                            txttensvmenu.setText(snapshot.child("name").getValue().toString());
+                            txtmasvmenu.setText(snapshot.child("idLecturers").getValue().toString());
+                            new LoadImagemenu().execute(snapshot.child("avatar").getValue().toString());
+
+                            // lưu lại dữ liệu
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("name",snapshot.child("name").getValue().toString());
+                            editor.putString("idStudent",snapshot.child("idLecturers").getValue().toString());
+                            editor.putString("avatar",snapshot.child("avatar").getValue().toString());
+                            editor.commit();
+                        }
+                    }catch (Exception e){
+                        mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                txttensvmenu.setText(snapshot.child("name").getValue().toString());
+                                txtmasvmenu.setText(snapshot.child("idGuard").getValue().toString());
+                                new LoadImagemenu().execute(snapshot.child("avatar").getValue().toString());
+
+                                // lưu lại dữ liệu
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("name",snapshot.child("name").getValue().toString());
+                                editor.putString("idStudent",snapshot.child("idGuard").getValue().toString());
+                                editor.putString("avatar",snapshot.child("avatar").getValue().toString());
+                                editor.commit();
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+
                 }
 
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+        else {
+            txttensvmenu.setText(sharedPreferences.getString("name",""));
+            txtmasvmenu.setText(sharedPreferences.getString("idStudent",""));
+        }
 
-            }
-        });
     }
 
     // xử lí cho phép việc xử cho phép dùng camera
@@ -599,8 +777,8 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         b.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which){
-                finish();
-                System.exit(0);
+                moveTaskToBack(true);
+                System.exit(1);
             }
         });
         b.setNegativeButton("No", new DialogInterface.OnClickListener() {

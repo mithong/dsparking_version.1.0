@@ -13,18 +13,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.2"
-        android:background="#570087"
+        android:background="#360080"
         android:orientation="horizontal"
         android:weightSum="10"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/back11"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="25dp"
-            android:layout_weight="1.5"
-            android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+            android:layout_weight="1.5">
+            <ImageView
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:layout_weight="1.5"
+                android:src="@drawable/ic_baseline_arrow_back_ios_24" />
+        </LinearLayout>
 
         <Button
             android:layout_width="0dp"

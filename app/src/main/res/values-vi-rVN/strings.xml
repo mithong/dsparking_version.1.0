@@ -6,7 +6,7 @@
     <string name="matkhau">"Mật khẩu "</string>
     <string name="tendangnhap">"Tên đăng nhập "</string>
     <string name="dangnhapdetieptuc">đăng nhập để tiếp tục</string>
-    <string name="chaomung">xin chào bạn,\\nchào mừng trở lại</string>
+    <string name="chaomung">Xin chào bạn,\nChào mừng trở lại</string>
     <string name="nhapusername">Vui lòng nhập tên đăng nhập</string>
     <string name="nhapmatkhau">Vui lòng nhập mật khẩu</string>
     <string name="saiusername">Sai tên đăng nhập</string>
@@ -66,7 +66,7 @@
     <string name="danggiuxetaiqt">Bạn đang giữ xe tại cơ sở Quang Trung</string>
     <string name="danggiuxetainvl">Bạn đang giữ xe tại cơ sở Nguyễn Văn Linh</string>
     <string name="danggiuxetaihk">Bạn đang giữ xe tại cơ sở Hòa Khánh</string>
-    <string name="khonggiuxe">Bạn hiện không giữ xe tại trường</string>
+    <string name="khonggiuxe">"Bạn hiện không giữ xe "</string>
     <string name="nhapmasv">"Nhập mã sinh viên "</string>
     <string name="nhaptien">Nhập số tiền</string>
     <string name="chonmucnap">Chọn mức nạp tiền</string>
@@ -76,8 +76,8 @@
     <string name="vuilongnhapma">Vui Lòng Quét QR/Nhập Mã Sinh Viên Vào Ô Trên</string>
     <string name="naptienthanhcong">Nạp tiền thành công</string>
     <string name="bandaguixe">"Bạn đã gửi xe tại cơ sở "</string>
-    <string name="bandaduocnaptien">"Bạn đã nhận được tiền từ mã bảo vệ "</string>
-    <string name="bandaguitiencho">Bạn đã chuyển tiền cho mã sinh viên</string>
+    <string name="bandaduocnaptien">"Bạn đã nhận được tiền từ bảo vệ "</string>
+    <string name="bandaguitiencho">Bạn đã chuyển tiền cho sinh viên</string>
     <string name="trangchu">Trang Chủ</string>
     <string name="lichsu">Lịch Sử</string>
     <string name="thongtin">Thông Tin</string>
@@ -89,4 +89,7 @@
     <string name="Bancomuondangxuat">Bạn có muốn đăng xuất khỏi ứng dụng không ?</string>
     <string name="thang">Tháng</string>
     <string name="tuan">Tuần</string>
+    <string name="saimasv">Sai mã sinh viên</string>
+    <string name="Banganhettien">Tài khoản của bạn gần hết tiền. Vui lòng nạp thêm tiền vào tài khoản !!!</string>
+    <string name="kothedangnhap">Tài khoản này không thể đăng nhập!!!</string>
 </resources>

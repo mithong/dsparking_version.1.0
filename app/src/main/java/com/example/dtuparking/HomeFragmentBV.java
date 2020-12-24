@@ -91,7 +91,13 @@ public class HomeFragmentBV extends Fragment {
         btnnaptien.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                naptienchosv();
+                if(CheckInternet.isConnect(getContext())){
+                    naptienchosv();
+                }
+                else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.ktramang), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -162,7 +168,7 @@ public class HomeFragmentBV extends Fragment {
         mDatabase.child("User/information/parkingMan/").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                // kiểm tra có trống các o editext hay không
+                // kiểm tra có trống các editext hay không
                 try{
                     if(txttien.getText().toString().equals("")){
                         Toast.makeText(getActivity(), getResources().getString(R.string.vuilongnnhaptien), Toast.LENGTH_SHORT).show();
@@ -192,7 +198,7 @@ public class HomeFragmentBV extends Fragment {
                                                 mDatabase.child("User/information/parkingMan/").child(ma).child("money").setValue(s.toString());
 
 
-                                                DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                                DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                                 dateFormatter.setLenient(false);
                                                 Date today = new Date();
                                                 String tg = dateFormatter.format(today);
@@ -227,6 +233,10 @@ public class HomeFragmentBV extends Fragment {
                                 }
                             });
 
+                        }
+                        else{
+                            Toast.makeText(getActivity(), getResources().getString(R.string.saimasv), Toast.LENGTH_SHORT).show();
+                            txtmasv.setText(null);
                         }
                     }
                 }catch (Exception e){

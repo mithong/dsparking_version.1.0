@@ -32,6 +32,7 @@ public class login extends AppCompatActivity {
     CheckBox cbxluu;
     SharedPreferences sharedPreferences;
     EditText editText;
+    SeesionManager seesionManager;
 
 
     @Override
@@ -41,7 +42,6 @@ public class login extends AppCompatActivity {
 
         anhxa();
 
-
         // set chiều dài tên đăng nhập là 10 mật khẩu là 15 kí tự
         edtTdn.setCounterMaxLength(20);
         edtMk.setCounterMaxLength(15);
@@ -50,6 +50,7 @@ public class login extends AppCompatActivity {
         tiedtdn.setText(sharedPreferences.getString("tendangnhap",""));
         tiedtmk.setText(sharedPreferences.getString("matkhau",""));
         cbxluu.setChecked(sharedPreferences.getBoolean("check",false));
+        String id = sharedPreferences.getString("ma","");
 
         tiedtdn.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -71,6 +72,7 @@ public class login extends AppCompatActivity {
         String TenDangNhap = edtTdn.getEditText().getText().toString();
         String MatKhau = edtMk.getEditText().getText().toString();
 
+
         // tạo sự kiện khi nhấn vào nút đăng nhập
         btnDY.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,15 +81,7 @@ public class login extends AppCompatActivity {
             }
         });
 
-        if(TenDangNhap.equals("") || MatKhau.equals("")){
-
-        }
-        else {
-            if(ktra){
-                ktraDangNhap();
-            }
-
-        }
+        checkLogin(id);
 
     }
 
@@ -101,9 +95,11 @@ public class login extends AppCompatActivity {
         tiedtmk = (TextInputEditText) findViewById(R.id.TIedtMk);
         sharedPreferences = getSharedPreferences("datalogin",MODE_PRIVATE);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        seesionManager = new SeesionManager(getApplication());
     }
 
     public  void ktraDangNhap(){
+        final String[] id2 = {""};
         if(CheckInternet.isConnect(getBaseContext())){
             final String TenDangNhap = edtTdn.getEditText().getText().toString();
             final String MatKhau = edtMk.getEditText().getText().toString();
@@ -145,21 +141,35 @@ public class login extends AppCompatActivity {
                             else{
                                 // kiểm tra mật khẩu
                                 if(snapshot.child("pwd").getValue().toString().equals(MatKhau)){
-                                    Toast.makeText(login.this, getResources().getString(R.string.dangnhapthanhcong), Toast.LENGTH_SHORT).show();
-                                    // lưu lại tên đăng nhập và mật khẩu của người dùng
-                                    if(cbxluu.isChecked()){
+                                    if(snapshot.child("position").getValue().toString().equals("1") || snapshot.child("position").getValue().toString().equals("2") || snapshot.child("position").getValue().toString().equals("3")){
+                                        Toast.makeText(login.this, getResources().getString(R.string.dangnhapthanhcong), Toast.LENGTH_SHORT).show();
+                                        String id = snapshot.child("id").getValue().toString();
+                                        // lưu lại tên đăng nhập và mật khẩu của người dùng
+                                        if(cbxluu.isChecked()){
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            editor.putString("tendangnhap",TenDangNhap);
+                                            editor.putString("matkhau",MatKhau);
+                                            editor.putString("ma",id);
+                                            editor.putBoolean("check",true);
+                                            editor.commit();
+
+                                            seesionManager.SetLogin(true);
+                                        }
+                                        // gửi dữ liệu mã id người dùng qua class home bằng intent
+                                        Intent intent = new Intent(login.this, home.class);
+                                        intent.putExtra("idSinhVien",id);
+                                        startActivity(intent);
+                                    }
+                                    else{
+                                        Toast.makeText(login.this, getResources().getString(R.string.kothedangnhap), Toast.LENGTH_SHORT).show();
+
+                                        // xóa dữ liệu đã lưu
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString("tendangnhap",TenDangNhap);
-                                        editor.putString("matkhau",MatKhau);
-                                        editor.putBoolean("check",true);
+                                        editor.remove("tendangnhap");
+                                        editor.remove("matkhau");
+                                        editor.remove("check");
                                         editor.commit();
                                     }
-                                    // gửi dữ liệu mã id người dùng qua class home bằng intent
-                                    String id = snapshot.child("id").getValue().toString();
-                                    Intent intent = new Intent(login.this, home.class);
-                                    intent.putExtra("idSinhVien",id);
-                                    startActivity(intent);
-
                                 }
                                 else{
 
@@ -207,5 +217,13 @@ public class login extends AppCompatActivity {
             }
         });
         b.create().show();
+    }
+
+    private void checkLogin(String id){
+        if(seesionManager.check()){
+            Intent intent = new Intent(login.this, home.class);
+            intent.putExtra("idSinhVien",id);
+            startActivity(intent);
+        }
     }
 }

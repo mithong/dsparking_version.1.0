@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     Animation top,bottom;
     ImageView imglogo;
     TextView txtlogo;
+    SeesionManager seesionManager;
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         // set hiệu ứng cho logo và text
         imglogo.setAnimation(top);
         txtlogo.setAnimation(bottom);
+        seesionManager = new SeesionManager(getApplication());
+
 
         if(CheckInternet.isConnect(getBaseContext())){
             // tạo hiệu ứng chuyển trang với thời gian khi animation thực hiện
@@ -57,12 +60,14 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
-            },3000);
+            },2000);
         }
         else {
             Intent intent = new Intent(MainActivity.this,MaQRCode.class);
             startActivity(intent);
+            finish();
         }
+
 
     }
 
@@ -73,4 +78,6 @@ public class MainActivity extends AppCompatActivity {
         imglogo = (ImageView) findViewById(R.id.imageView);
         txtlogo = (TextView) findViewById(R.id.textView);
     }
+
+
 }

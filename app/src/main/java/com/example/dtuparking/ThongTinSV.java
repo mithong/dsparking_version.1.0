@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,12 +51,14 @@ public class ThongTinSV extends AppCompatActivity {
     private DatabaseReference mDatabase;
     TextView txttenngdung,txtngaysinh,txtgioitinh,txtdiachi,txtchangema,txtmasv,txtchangelop,txtlop ;
     Button btndoi;
-    ImageView imgback, imgttavatar;
+    ImageView imgttavatar;
+    LinearLayout imgback;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     FirebaseStorage storage ;
     StorageReference forder;
     String id;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,50 +71,41 @@ public class ThongTinSV extends AppCompatActivity {
         Intent intent = getIntent();
         id = intent.getStringExtra("idSinhVien");
 
-        // truy vấn đến thông tin trong firebase
-        mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try{
-                    // kiểm tra có phải sinh viên
-                    if(snapshot.child("position").getValue().toString().equals("3")){
-                        txttenngdung.setText(snapshot.child("name").getValue().toString());
-                        txtngaysinh.setText(snapshot.child("birthday").getValue().toString());
-                        // kiểm tra nam or nữ
-                        if(snapshot.child("sex").getValue().toString().equals("1")){
-                            txtgioitinh.setText(getResources().getString(R.string.nam));
-                        }
-                        else
-                            txtgioitinh.setText(getResources().getString(R.string.nu));
+        if(CheckInternet.isConnect(getBaseContext())){
+            // truy vấn đến thông tin trong firebase
+            mDatabase.child("User/information/parkingMan/").child(id).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    try{
+                        // kiểm tra có phải sinh viên
+                        if(snapshot.child("position").getValue().toString().equals("3")){
+                            txttenngdung.setText(snapshot.child("name").getValue().toString());
+                            txtngaysinh.setText(snapshot.child("birthday").getValue().toString());
+                            // kiểm tra nam or nữ
+                            if(snapshot.child("sex").getValue().toString().equals("1")){
+                                txtgioitinh.setText(getResources().getString(R.string.nam));
+                            }
+                            else
+                                txtgioitinh.setText(getResources().getString(R.string.nu));
+                            txtdiachi.setText(snapshot.child("adress").getValue().toString());
+                            txtmasv.setText(snapshot.child("idStudent").getValue().toString());
+                            txtlop.setText(snapshot.child("classS").getValue().toString());
+                            // gọi hàm log ảnh
+                            new ThongTinSV.LoadImage().execute(snapshot.child("avatar").getValue().toString());
 
-                        txtdiachi.setText(snapshot.child("adress").getValue().toString());
-                        txtmasv.setText(snapshot.child("idStudent").getValue().toString());
-                        txtlop.setText(snapshot.child("classS").getValue().toString());
-                        // gọi hàm log ảnh
-                        new ThongTinSV.LoadImage().execute(snapshot.child("avatar").getValue().toString());
-                    }
-                    // kiểm tra có phải giảng viên
-                    else if(snapshot.child("position").getValue().toString().equals("2")){
-                        txttenngdung.setText(snapshot.child("name").getValue().toString());
-                        txtngaysinh.setText(snapshot.child("birthday").getValue().toString());
-                        if(snapshot.child("sex").getValue().toString().equals("1")){
-                            txtgioitinh.setText(getResources().getString(R.string.nam));
+                            // lưu lại dữ liệu
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("name",snapshot.child("name").getValue().toString());
+                            editor.putString("birthday",snapshot.child("birthday").getValue().toString());
+                            editor.putString("sex",snapshot.child("sex").getValue().toString());
+                            editor.putString("adress",snapshot.child("adress").getValue().toString());
+                            editor.putString("idStudent",snapshot.child("idStudent").getValue().toString());
+                            editor.putString("classS",snapshot.child("classS").getValue().toString());
+                            editor.putInt("ktrarole",1);
+                            editor.commit();
                         }
-                        else
-                            txtgioitinh.setText(getResources().getString(R.string.nu));
-
-                        txtdiachi.setText(snapshot.child("adress").getValue().toString());
-                        txtchangema.setText(getResources().getString(R.string.magiangvien));
-                        txtmasv.setText(snapshot.child("idLecturers").getValue().toString());
-                        txtlop.setVisibility(View.INVISIBLE);
-                        txtchangelop.setVisibility(View.INVISIBLE);
-                        new ThongTinSV.LoadImage().execute(snapshot.child("avatar").getValue().toString());
-                    }
-                }catch (Exception e){
-                    // kiểm tra có phải bảo vệ
-                    mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // kiểm tra có phải giảng viên
+                        else if(snapshot.child("position").getValue().toString().equals("2")){
                             txttenngdung.setText(snapshot.child("name").getValue().toString());
                             txtngaysinh.setText(snapshot.child("birthday").getValue().toString());
                             if(snapshot.child("sex").getValue().toString().equals("1")){
@@ -120,41 +115,140 @@ public class ThongTinSV extends AppCompatActivity {
                                 txtgioitinh.setText(getResources().getString(R.string.nu));
 
                             txtdiachi.setText(snapshot.child("adress").getValue().toString());
-                            txtchangema.setText(getResources().getString(R.string.mabaove));
-                            txtmasv.setText(snapshot.child("idGuard").getValue().toString());
-                            // ẩn các dòng không phù hợp
+                            txtchangema.setText(getResources().getString(R.string.magiangvien));
+                            txtmasv.setText(snapshot.child("idLecturers").getValue().toString());
                             txtlop.setVisibility(View.INVISIBLE);
                             txtchangelop.setVisibility(View.INVISIBLE);
                             new ThongTinSV.LoadImage().execute(snapshot.child("avatar").getValue().toString());
+
+                            // lưu lại dữ liệu
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("name",snapshot.child("name").getValue().toString());
+                            editor.putString("birthday",snapshot.child("birthday").getValue().toString());
+                            editor.putString("sex",snapshot.child("sex").getValue().toString());
+                            editor.putString("adress",snapshot.child("adress").getValue().toString());
+                            editor.putString("idStudent",snapshot.child("idLecturers").getValue().toString());
+                            editor.putString("classS",snapshot.child("classS").getValue().toString());
+                            editor.putInt("ktrarole",2);
+                            editor.commit();
                         }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                    }catch (Exception e){
+                        // kiểm tra có phải bảo vệ
+                        mDatabase.child("User/information/guard/").child(id).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                txttenngdung.setText(snapshot.child("name").getValue().toString());
+                                txtngaysinh.setText(snapshot.child("birthday").getValue().toString());
+                                if(snapshot.child("sex").getValue().toString().equals("1")){
+                                    txtgioitinh.setText(getResources().getString(R.string.nam));
+                                }
+                                else
+                                    txtgioitinh.setText(getResources().getString(R.string.nu));
 
-                        }
-                    });
+                                txtdiachi.setText(snapshot.child("adress").getValue().toString());
+                                txtchangema.setText(getResources().getString(R.string.mabaove));
+                                txtmasv.setText(snapshot.child("idGuard").getValue().toString());
+                                // ẩn các dòng không phù hợp
+                                txtlop.setVisibility(View.INVISIBLE);
+                                txtchangelop.setVisibility(View.INVISIBLE);
+                                new ThongTinSV.LoadImage().execute(snapshot.child("avatar").getValue().toString());
+
+                                // lưu lại dữ liệu
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("name",snapshot.child("name").getValue().toString());
+                                editor.putString("birthday",snapshot.child("birthday").getValue().toString());
+                                editor.putString("sex",snapshot.child("sex").getValue().toString());
+                                editor.putString("adress",snapshot.child("adress").getValue().toString());
+                                editor.putString("idStudent",snapshot.child("idGuard").getValue().toString());
+                                editor.putString("classS",snapshot.child("classS").getValue().toString());
+                                editor.putInt("ktrarole",3);
+                                editor.commit();
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+
+
                 }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        // xử lí việc truy cập vào thư viện điện thoại
-        btndoi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(ThongTinSV.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_CODE_STORAGE_PERMISSION);
                 }
-                else {
-                    selectImage();
+            });
+
+            // xử lí việc truy cập vào thư viện điện thoại
+            btndoi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions(ThongTinSV.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},REQUEST_CODE_STORAGE_PERMISSION);
+                    }
+                    else {
+                        selectImage();
+                    }
                 }
+            });
+
+        }
+        else {
+            Integer ktrarole = sharedPreferences.getInt("ktrarole",0);
+            if(ktrarole == 1){
+                txttenngdung.setText(sharedPreferences.getString("name",""));
+                txtngaysinh.setText(sharedPreferences.getString("birthday",""));
+                String sex = sharedPreferences.getString("sex","");
+                if(sex.equals("1")){
+                    txtgioitinh.setText(getResources().getString(R.string.nam));
+                }
+                else
+                    txtgioitinh.setText(getResources().getString(R.string.nu));
+                txtdiachi.setText(sharedPreferences.getString("adress",""));
+                txtmasv.setText(sharedPreferences.getString("idStudent",""));
+                txtlop.setText(sharedPreferences.getString("classS",""));
             }
-        });
+            else if(ktrarole == 2){
+                txttenngdung.setText(sharedPreferences.getString("name",""));
+                txtngaysinh.setText(sharedPreferences.getString("birthday",""));
+                String sex = sharedPreferences.getString("sex","");
+                if(sex.equals("1")){
+                    txtgioitinh.setText(getResources().getString(R.string.nam));
+                }
+                else
+                    txtgioitinh.setText(getResources().getString(R.string.nu));
+                txtdiachi.setText(sharedPreferences.getString("adress",""));
+                txtchangema.setText(getResources().getString(R.string.magiangvien));
+                txtmasv.setText(sharedPreferences.getString("idStudent",""));
+                txtlop.setVisibility(View.INVISIBLE);
+                txtchangelop.setVisibility(View.INVISIBLE);
+            }
+            else if(ktrarole == 3){
+                txttenngdung.setText(sharedPreferences.getString("name",""));
+                txtngaysinh.setText(sharedPreferences.getString("birthday",""));
+                String sex = sharedPreferences.getString("sex","");
+                if(sex.equals("1")){
+                    txtgioitinh.setText(getResources().getString(R.string.nam));
+                }
+                else
+                    txtgioitinh.setText(getResources().getString(R.string.nu));
+                txtdiachi.setText(sharedPreferences.getString("adress",""));
+                txtchangema.setText(getResources().getString(R.string.mabaove));
+                txtmasv.setText(sharedPreferences.getString("idStudent",""));
+                txtlop.setVisibility(View.INVISIBLE);
+                txtchangelop.setVisibility(View.INVISIBLE);
+            }
+            btndoi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(ThongTinSV.this, getResources().getString(R.string.ktramang), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+
+
 
         // quay lại trang trước
         imgback.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +305,7 @@ public class ThongTinSV extends AppCompatActivity {
         }
     }
 
-    // thay đổi ảnh được chọn và gửi lên firebase
+        // thay đổi ảnh được chọn và gửi lên firebase
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -225,11 +319,11 @@ public class ThongTinSV extends AppCompatActivity {
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         imgttavatar.setImageBitmap(bitmap);
 
-                        final StorageReference imagename = forder.child("image"+selectedImageUri.getLastPathSegment());
+                        final StorageReference imagename = forder.child("image"+id);
                         imagename.putFile(selectedImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(ThongTinSV.this, "Đổi Avatar Thành Công", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ThongTinSV.this, getResources().getString(R.string.doiavatathanhcong), Toast.LENGTH_SHORT).show();
                                 imagename.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(final Uri uri) {
@@ -259,7 +353,7 @@ public class ThongTinSV extends AppCompatActivity {
                                 });
                             }
                         });
-                        luufirebase();
+
 
                     } catch (FileNotFoundException e) {
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -268,10 +362,6 @@ public class ThongTinSV extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    private void luufirebase() {
-
     }
 
     // ánh xạ các đối tượng
@@ -290,5 +380,6 @@ public class ThongTinSV extends AppCompatActivity {
         txtmasv = findViewById(R.id.txt_masv);
         txtchangelop = findViewById(R.id.txt_class);
         txtlop = findViewById(R.id.txt_lophoc);
+        sharedPreferences = getBaseContext().getSharedPreferences("datalogin",MODE_PRIVATE);
     }
 }

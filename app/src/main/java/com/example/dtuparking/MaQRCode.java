@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +30,8 @@ import androidmads.library.qrgenearator.QRGEncoder;
 
 public class MaQRCode extends AppCompatActivity {
 
-    private ImageView imgQr,imgback;
+    private ImageView imgQr;
+    private LinearLayout imgback;
     private DatabaseReference mDatabase;
     private Button btnDoiMa;
     SharedPreferences sharedPreferences;
@@ -41,7 +43,7 @@ public class MaQRCode extends AppCompatActivity {
 
         // ánh xạ
         imgQr = (ImageView) findViewById(R.id.imgQrcode);
-        imgback = (ImageView) findViewById(R.id.back2);
+        imgback =  findViewById(R.id.back2);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         btnDoiMa =(Button) findViewById(R.id.btnChangeCode);
         sharedPreferences = getSharedPreferences("dataQR",MODE_PRIVATE);
@@ -50,12 +52,7 @@ public class MaQRCode extends AppCompatActivity {
         Intent intent = getIntent();
         final String id = intent.getStringExtra("idSinhVien");
 
-        imgback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick( View view ) {
-                onBackPressed();
-            }
-        });
+
 
         if(CheckInternet.isConnect(getBaseContext())){
             // truy ấn tới mã QRCODE
@@ -127,6 +124,13 @@ public class MaQRCode extends AppCompatActivity {
 
                 }
             });
+
+            imgback.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick( View view ) {
+                    onBackPressed();
+                }
+            });
         }
         else {
             String id1 = sharedPreferences.getString("id","");
@@ -143,6 +147,15 @@ public class MaQRCode extends AppCompatActivity {
             } catch (WriterException e) {
                 e.printStackTrace();
             }
+
+            imgback.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick( View view ) {
+                    Intent intent = new Intent(MaQRCode.this,home.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
         }
 
 
@@ -164,83 +177,89 @@ public class MaQRCode extends AppCompatActivity {
         Intent intent = getIntent();
         final String id = intent.getStringExtra("idSinhVien");
 
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick( DialogInterface dialogInterface, int i ) {
-                mDatabase.child("User/information/parkingMan/").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange( @NonNull DataSnapshot snapshot ) {
-                        // kiểm tra có phải sinh viên
-                        if(snapshot.child("position").getValue().toString().equals("3")){
-                            // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
-                            String id = snapshot.getKey().toString();
-                            String idStudent = snapshot.child("idStudent").getValue().toString();
-                            String name = snapshot.child("name").getValue().toString();
+        if(CheckInternet.isConnect(getBaseContext())){
+            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick( DialogInterface dialogInterface, int i ) {
+                    mDatabase.child("User/information/parkingMan/").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange( @NonNull DataSnapshot snapshot ) {
+                            // kiểm tra có phải sinh viên
+                            if(snapshot.child("position").getValue().toString().equals("3")){
+                                // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
+                                String id = snapshot.getKey().toString();
+                                String idStudent = snapshot.child("idStudent").getValue().toString();
+                                String name = snapshot.child("name").getValue().toString();
 
-                            // tạo dữ liệu secretNum ngẫu nhiên
-                            Random random = new Random();
-                            int num = random.nextInt(100000);
-                            String secretNu = String.valueOf(num);
+                                // tạo dữ liệu secretNum ngẫu nhiên
+                                Random random = new Random();
+                                int num = random.nextInt(100000);
+                                String secretNu = String.valueOf(num);
 
-                            // thay đổi secretNum vừa tạo với cái dữ liệu cũ
-                            mDatabase.child("User/information/parkingMan/").child(id).child("secretNum").setValue(num);
+                                // thay đổi secretNum vừa tạo với cái dữ liệu cũ
+                                mDatabase.child("User/information/parkingMan/").child(id).child("secretNum").setValue(num);
 
-                            // Tổng hợp dữ liệu
-                            String dulieu = id+"|"+idStudent+"|"+name+"|"+secretNu;
+                                // Tổng hợp dữ liệu
+                                String dulieu = id+"|"+idStudent+"|"+name+"|"+secretNu;
 
-                            // tạo mã QR từ các dữ liệu trên
-                            QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
-                            try {
-                                Bitmap bitmap = qrgEncoder.encodeAsBitmap();
-                                imgQr.setImageBitmap(bitmap);
-                            } catch (WriterException e) {
-                                e.printStackTrace();
+                                // tạo mã QR từ các dữ liệu trên
+                                QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
+                                try {
+                                    Bitmap bitmap = qrgEncoder.encodeAsBitmap();
+                                    imgQr.setImageBitmap(bitmap);
+                                } catch (WriterException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            // kiểm tra có phải giảng viên
+                            else if(snapshot.child("position").getValue().toString().equals("2")){
+
+                                // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
+                                String id = snapshot.getKey().toString();
+                                String name = snapshot.child("name").getValue().toString();
+                                String idLecturers = snapshot.child("idLecturers").getValue().toString();
+
+                                Random random = new Random();
+                                int num = random.nextInt(100000);
+                                String secretNum = String.valueOf(num);
+
+                                // thay đổi secretNum vừa tạo với cái dữ liệu cũ
+                                mDatabase.child("User/information/parkingMan/").child(id).child("secretNum").setValue(num);
+
+                                // tổng hợp các dữ liệu
+                                String dulieu = id+"|"+idLecturers+"|"+name+"|"+secretNum;
+
+                                // tạo mã QR từ các dữ liệu trên
+                                QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
+                                try {
+                                    Bitmap bitmap = qrgEncoder.encodeAsBitmap();
+                                    imgQr.setImageBitmap(bitmap);
+                                } catch (WriterException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
 
-                        // kiểm tra có phải giảng viên
-                        else if(snapshot.child("position").getValue().toString().equals("2")){
+                        @Override
+                        public void onCancelled( @NonNull DatabaseError error ) {
 
-                            // set dữ liệu string để tạo mã Qr dựa vào thông tin sinh viên
-                            String id = snapshot.getKey().toString();
-                            String name = snapshot.child("name").getValue().toString();
-                            String idLecturers = snapshot.child("idLecturers").getValue().toString();
-
-                            Random random = new Random();
-                            int num = random.nextInt(100000);
-                            String secretNum = String.valueOf(num);
-
-                            // thay đổi secretNum vừa tạo với cái dữ liệu cũ
-                            mDatabase.child("User/information/parkingMan/").child(id).child("secretNum").setValue(num);
-
-                            // tổng hợp các dữ liệu
-                            String dulieu = id+"|"+idLecturers+"|"+name+"|"+secretNum;
-
-                            // tạo mã QR từ các dữ liệu trên
-                            QRGEncoder qrgEncoder = new QRGEncoder(dulieu,null, QRGContents.Type.TEXT,800);
-                            try {
-                                Bitmap bitmap = qrgEncoder.encodeAsBitmap();
-                                imgQr.setImageBitmap(bitmap);
-                            } catch (WriterException e) {
-                                e.printStackTrace();
-                            }
                         }
-                    }
+                    });
+                }
+            });
 
-                    @Override
-                    public void onCancelled( @NonNull DatabaseError error ) {
+            alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick( DialogInterface dialogInterface, int i ) {
 
-                    }
-                });
-            }
-        });
+                }
+            });
+            alertDialog.show();
+        }
+        else {
+            Toast.makeText(MaQRCode.this, getResources().getString(R.string.ktramang), Toast.LENGTH_SHORT).show();
+        }
 
-        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick( DialogInterface dialogInterface, int i ) {
-
-            }
-        });
-        alertDialog.show();
     }
 }

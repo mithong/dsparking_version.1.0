@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class PhanHoi extends AppCompatActivity {
 
     DatabaseReference mDatabase;
-    ImageView back;
+    LinearLayout back;
     Button btnGui;
     EditText phanhoi;
     @Override
@@ -52,10 +53,16 @@ public class PhanHoi extends AppCompatActivity {
                     Toast.makeText(PhanHoi.this, getResources().getString(R.string.Vuilongnhap), Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    ph = phanhoi.getText().toString();
-                    mDatabase.child("Feedback").child(id).setValue(ph);
-                    Toast.makeText(PhanHoi.this, getResources().getString(R.string.guithanhcong), Toast.LENGTH_SHORT).show();
-                    phanhoi.setText(null);
+                    if(CheckInternet.isConnect(getBaseContext())){
+                        ph = phanhoi.getText().toString();
+                        mDatabase.child("Feedback").child(id).setValue(ph);
+                        Toast.makeText(PhanHoi.this, getResources().getString(R.string.guithanhcong), Toast.LENGTH_SHORT).show();
+                        phanhoi.setText(null);
+                    }
+                    else {
+                        Toast.makeText(PhanHoi.this, getResources().getString(R.string.ktramang), Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });
